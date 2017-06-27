@@ -8,7 +8,7 @@ import { environment } from '../../environments/environment';
 /* App Feature - Service */
 import { AUTH_PROVIDERS } from 'angular2-jwt';
 import { AuthGuard } from './auth-guard.service';
-import { ProjectService } from './project.service';
+import { AccountService } from './account.service';
 import { HttpService } from './http.service';
 import { LoggerService, Options as OptionsLogger, Level } from './logger.service';
 
@@ -17,7 +17,10 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
 }
 
 @NgModule({
-  imports:      [ CommonModule ],
+  imports:      [
+		CommonModule,
+		HttpModule
+	],
   declarations: [ ],
   exports:      [ ],
   providers:    [
@@ -27,7 +30,7 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
       deps: [ Http, RequestOptions ]
     },
 		AuthGuard,
-    ProjectService,
+    AccountService,
 		HttpService,
 		{
 			provide: OptionsLogger,

@@ -13,10 +13,10 @@ import { LoggerService } from './core/logger.service';
 /* App Animations */
 
 @Component({
-	moduleId: module.id,
-  selector: 'as-app',
-	templateUrl: 'app.component.html',
-  styleUrls: [ 'app.component.scss' ]
+	moduleId : module.id,
+  selector : 'as-app',
+	templateUrl : 'app.component.html',
+  styleUrls : [ 'app.component.scss' ]
 })
 export class AppComponent implements OnInit, OnDestroy {
 	private animationState : string = 'open';

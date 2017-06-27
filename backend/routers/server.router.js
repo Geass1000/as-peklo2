@@ -3,13 +3,13 @@
 let express = require('express');
 let router = express.Router();
 
-let editorRouter = require('./editor.router');
+let accountRouter = require('./account.router');
 //... other routers
 
 /*
  * API paths
  */
-router.use('/', editorRouter);
+router.use('/', accountRouter);
 //... other paths
 
 router.use('/api', router);

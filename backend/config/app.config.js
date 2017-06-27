@@ -6,7 +6,7 @@ config.env = 'production';
 
 if (process.env.NODE_ENV !== 'production') {
 	let dotenv = require('dotenv');
-	dotenv.config({path: __dirname + '/../../.env'});
+	dotenv.config({ path: __dirname + '/../../.env' });
 	config.env = 'development';
 }
 

@@ -1,0 +1,27 @@
+<section class="base-section">
+	<div class="base-block page-block">
+
+		<div class="signin-block">
+			<h1 class="header">Вход в аккаунт</h1>
+			<form [formGroup]="form" (ngSubmit)="onSubmit()" class="form-1">
+				<div class="form-group" [class.focused]="form.get('uid').value">
+					<input type="text" class="form-control" required
+						name="uid" formControlName="uid" id="uid" />
+					<label for="uid">UID</label>
+				</div>
+				<div class="form-group" [class.focused]="form.get('auth_key').value">
+					<input type="text" class="form-control" required
+						name="auth_key" formControlName="auth_key" id="auth_key" />
+					<label for="auth_key">AUTH_KEY</label>
+				</div>
+
+				<button type="submit" [disabled]="!form.valid">Войти</button>
+
+				<div *ngIf="formError.serverError" class="form-error">
+					{{formError.serverError}}
+				</div>
+			</form>
+		</div>
+
+	</div>
+</section>

@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 import { NgReduxModule } from '@angular-redux/store';
 
@@ -13,6 +14,7 @@ import { AppRoutingModule } from './app-routing.module';
 /* App Root */
 import { AppComponent } from './app.component';
 import { NotFoundComponent } from './not-found/not-found.component';
+import { SigninComponent } from './signin/signin.component';
 
 /* App Root - Actions */
 import { AppActions } from './actions/app.actions';
@@ -22,12 +24,15 @@ import { AppActions } from './actions/app.actions';
 		BrowserModule,
 		BrowserAnimationsModule,
 		CoreModule,
+		FormsModule,
+		ReactiveFormsModule,
 		NgReduxModule,
 		AppRoutingModule
 	],
   declarations: [
 		AppComponent,
-		NotFoundComponent
+		NotFoundComponent,
+		SigninComponent
 	],
 	providers: [
 		AppActions
