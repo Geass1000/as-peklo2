@@ -15,6 +15,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { SigninComponent } from './signin/signin.component';
+import { GameInfoComponent } from './game-info/game-info.component';
 
 /* App Root - Actions */
 import { AppActions } from './actions/app.actions';
@@ -32,7 +33,8 @@ import { AppActions } from './actions/app.actions';
   declarations: [
 		AppComponent,
 		NotFoundComponent,
-		SigninComponent
+		SigninComponent,
+		GameInfoComponent
 	],
 	providers: [
 		AppActions
