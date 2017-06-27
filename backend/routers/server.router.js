@@ -3,13 +3,13 @@
 let express = require('express');
 let router = express.Router();
 
-let accountRouter = require('./account.router');
+let gameRouter = require('./game.router');
 //... other routers
 
 /*
  * API paths
  */
-router.use('/', accountRouter);
+router.use('/', gameRouter);
 //... other paths
 
 router.use('/api', router);

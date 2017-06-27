@@ -3,7 +3,7 @@
 let express = require('express');
 let router = express.Router();
 
-let AccountController = require('../controllers/account.controller');
+let GameController = require('../controllers/game.controller');
 //... other controllers
 
 let config = require('../config/app.config');
@@ -14,12 +14,12 @@ let jwtCheck = jwt({
 });
 
 //... Project
-router.route('/')
-			.post(AccountController.postSignin.bind(AccountController));
+router.route('/account').post(GameController.postSignin.bind(GameController));
+router.route('/info').post(GameController.postGetInfo.bind(GameController));
 
 //... other paths
 
 //... Root path
-router.use('/account', router);
+router.use('/game', router);
 
 module.exports = router;
