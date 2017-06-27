@@ -1,1 +1,3 @@
-<as-signin></as-signin>
+<div *ngIf="sid$ | async; then thenBlock else elseBlock"></div>
+<ng-template #thenBlock><as-game-info></as-game-info></ng-template>
+<ng-template #elseBlock><as-signin></as-signin></ng-template>

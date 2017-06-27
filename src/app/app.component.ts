@@ -23,7 +23,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
 	/* Redux */
 	private subscription : Array<Subscription> = [];
-	@select(['state', 'fullwidthMode']) fullwidthMode$ : Observable<boolean>;
+	@select(['state', 'sid']) sid$ : Observable<string>;
 
 	constructor (private ngRedux : NgRedux<IApp>,
 							 private appActions : AppActions,
