@@ -8,10 +8,10 @@ import { AppActions } from '../actions/app.actions';
 
 /* App Services */
 import { LoggerService } from '../core/logger.service';
-import { AccountService } from '../core/account.service';
+import { GameService } from '../core/game.service';
 
 /* App Interfaces and Classes */
-import { ISignin, IRAcc } from '../shared/interfaces/account.interface';
+import { ISignin, IRSignin } from '../shared/interfaces/game.interface';
 
 @Component({
 	moduleId: module.id,
@@ -33,7 +33,7 @@ export class SigninComponent implements OnInit, OnDestroy {
 						 	 private ngRedux : NgRedux<any>,
 						 	 private appActions : AppActions,
 						 	 private logger : LoggerService,
-						 	 private accountService : AccountService) { ; }
+						 	 private gameService : GameService) { ; }
 
 	ngOnInit () : void {
 		this.buildForm();
@@ -64,9 +64,9 @@ export class SigninComponent implements OnInit, OnDestroy {
 	 */
 	onSubmit () : void {
 		const result : ISignin = <ISignin>Object.assign({}, this.form.value);
-		const sub : Subscription = this.accountService.postSignin(result).subscribe(
-			(data : IRAcc) => {
-				this.ngRedux.dispatch(this.appActions.setSid(data.sid));
+		const sub : Subscription = this.gameService.postSignin(result).subscribe(
+			(data : IRSignin) => {
+				this.ngRedux.dispatch(this.appActions.setAcc(result.uid, result.auth_key, data.sid));
 				this.formError.serverError = '';
 			},
 			(error : string) => {
