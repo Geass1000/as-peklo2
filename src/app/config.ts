@@ -2,7 +2,7 @@ import { environment } from '../environments/environment';
 
 export class Config {
 	static readonly apiUrl : string = environment.apiUrl ? environment.apiUrl : '';
-  static readonly accUrl : string = `${Config.apiUrl}/api/account/`;
+  static readonly gameUrl : string = `${Config.apiUrl}/api/game/`;
 
 	/* Http */
 	static minRetryCount : number = 5;
