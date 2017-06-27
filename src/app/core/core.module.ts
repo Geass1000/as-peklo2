@@ -8,7 +8,7 @@ import { environment } from '../../environments/environment';
 /* App Feature - Service */
 import { AUTH_PROVIDERS } from 'angular2-jwt';
 import { AuthGuard } from './auth-guard.service';
-import { AccountService } from './account.service';
+import { GameService } from './game.service';
 import { HttpService } from './http.service';
 import { LoggerService, Options as OptionsLogger, Level } from './logger.service';
 
@@ -30,7 +30,7 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
       deps: [ Http, RequestOptions ]
     },
 		AuthGuard,
-    AccountService,
+    GameService,
 		HttpService,
 		{
 			provide: OptionsLogger,
