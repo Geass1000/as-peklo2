@@ -2,30 +2,28 @@ import { Reducer } from 'redux';
 import { IAction } from '../shared/interfaces/action.interface';
 import { AppActions } from '../actions/app.actions';
 
+import { IResources, IArmory } from '../shared/interfaces/game.interface';
+
 export interface IState {
-	uid : string;
-	auth_key : string;
-	sid : string;
+	resources : IResources;
+	armory : IArmory;
 }
 
 export const INITIAL_STATE : IState = {
-	uid : '',
-	auth_key : '',
-	sid : ''
+	resources : null,
+	armory : null
 };
 
 export const StateReducer : Reducer<IState> = (state = INITIAL_STATE, action : IAction) : IState => {
 	switch (action.type) {
-		case AppActions.SET_ACC : {
+		case AppActions.SET_RESOURCES : {
 			return Object.assign({}, state, {
-				uid : action.payload.uid,
-				auth_key : action.payload.auth_key,
-				sid : action.payload.sid
+				resources : <IResources>action.payload.resources
 			});
 		}
-		case AppActions.SET_SID : {
+		case AppActions.SET_ARMORY : {
 			return Object.assign({}, state, {
-				sid : action.payload.sid
+				armory : <IArmory>action.payload.armory
 			});
 		}
 	}
