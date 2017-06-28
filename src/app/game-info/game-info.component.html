@@ -1,9 +1,20 @@
 <section class="base-section">
 	<div class="base-block page-block">
-
-		<h1>Металл</h1>
-		<h1>Кристалл</h1>
-		<h1>Кордит</h1>
-
+		<div class="resources-block" *ngIf="stateResources">
+			<h1>Металл: {{stateResources.metal}}</h1>
+			<h1>Кристалл: {{stateResources.crystal}}</h1>
+			<h1>Кордит: {{stateResources.cordite}}</h1>
+			<h1>Топлива: {{stateResources.fuel}}</h1>
+		</div>
+		<div class="resources-block" *ngIf="stateArmory">
+			<h1>Арт. удар: {{stateArmory.air_strike}}</h1>
+			<h1>Медикаменты: {{stateArmory.medicaments}}</h1>
+			<h1>Гравибомбы: {{stateArmory.gravibomb}}</h1>
+			<h1>Щиты: {{stateArmory.shields}}</h1>
+			<h1>Косм. мины: {{stateArmory.space_mines}}</h1>
+			<h1>Рем. боты: {{stateArmory.repair_drones}}</h1>
+			<h1>Адаптивное покрытие: {{stateArmory.adaptive_shield}}</h1>
+			<h1>Ловушка: {{stateArmory.ecm}}</h1>
+		</div>
 	</div>
 </section>

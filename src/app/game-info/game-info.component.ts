@@ -13,7 +13,7 @@ import { GameService } from '../core/game.service';
 
 /* App Interfaces and Classes */
 import { IState } from '../reducers/state.reducer';
-import { IAcc, IRGameInfo, IResources, IArmory } from '../shared/interfaces/game.interface';
+import { IRGameInfo, IResources, IArmory } from '../shared/interfaces/game.interface';
 
 @Component({
 	moduleId: module.id,
@@ -29,8 +29,10 @@ export class GameInfoComponent implements OnInit, OnDestroy {
 	/* Redux */
 	private subscription : Array<Subscription> = [];
 
-	@select(['state']) state$ : Observable<IState>;
-	public state : IState;
+	@select(['state', 'resources']) stateResources$ : Observable<IResources>;
+	public stateResources : IResources;
+	@select(['state', 'armory']) stateArmory$ : Observable<IArmory>;
+	public stateArmory : IArmory;
 
 	constructor (private fb : FormBuilder,
 						 	 private ngRedux : NgRedux<any>,
@@ -39,14 +41,13 @@ export class GameInfoComponent implements OnInit, OnDestroy {
 						 	 private gameService : GameService) { ; }
 
 	ngOnInit () : void {
-		this.subscription.push(this.state$.subscribe((data) => {
-			this.state = data;
-			this.getInfo({
-				uid : data.uid,
-				auth_key : data.auth_key,
-				sid : data.sid
-			});
+		this.subscription.push(this.stateResources$.subscribe((data) => {
+			this.stateResources = data;
 		}));
+		this.subscription.push(this.stateArmory$.subscribe((data) => {
+			this.stateArmory = data;
+		}));
+		this.getInfo();
   }
 	ngOnDestroy () : void {
 		this.subscription.map((data) => data.unsubscribe());
@@ -58,13 +59,11 @@ export class GameInfoComponent implements OnInit, OnDestroy {
 	 * @kind {event}
 	 * @return {void}
 	 */
-	getInfo (data : IAcc) : void {
-		const result : IAcc = <IAcc>Object.assign({}, data);
-		const sub : Subscription = this.gameService.postGetInfo(result).subscribe(
+	getInfo () : void {
+		const sub : Subscription = this.gameService.postGetInfo().subscribe(
 			(data : IRGameInfo) => {
-				this.logger.info(`${this.constructor.name} - getInfo:`, <IResources>JSON.parse(data.resources));
-				this.logger.info(`${this.constructor.name} - getInfo:`, <IArmory>JSON.parse(data.armory));
-				//this.ngRedux.dispatch(this.appActions.setAcc(result.uid, result.auth_key, data.sid));
+				this.ngRedux.dispatch(this.appActions.setResources(data.resources));
+				this.ngRedux.dispatch(this.appActions.setArmory(data.armory));
 			},
 			(error : string) => {
 			}
