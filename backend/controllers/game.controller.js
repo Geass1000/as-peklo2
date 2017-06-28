@@ -2,8 +2,10 @@
 
 const http = require("http");
 const path = require('path');
-let scriptName = path.basename(__filename, path.extname(__filename));
+const scriptName = path.basename(__filename, path.extname(__filename));
+const jwt = require('jsonwebtoken');
 
+const config = require('../config/app.config');
 const logger = require('../config/logger.config');
 
 const BaseController = require('../lib/base-controller.class');
@@ -60,8 +62,15 @@ class GameController extends BaseController {
 				this.logger.info(`${this.constructor.name} - ${methodName}:`, JSON.stringify(result));
 
 				if (!result['error']) {
+					const expires = 86400; // 60s * 60m * 24h * 1d = 86400s (1 days)
+					const token = jwt.sign({
+						uid : body.uid,
+						auth_key : body.auth_key,
+						sid : result['response']['auth_ok'][0]['sid'][0]
+					}, config.secret, { expiresIn : expires });
+
 					message = 'Sid was received';
-					this.sendSuccessResponse(res, 200, { sid : result['response']['auth_ok'][0]['sid'][0] }, methodName, message);
+					this.sendSuccessResponse(res, 200, { token : token }, methodName, message);
 				} else {
 					this.sendErrorResponse(res, new AppError('myNotExist', 400), methodName)
 				}
@@ -82,8 +91,9 @@ class GameController extends BaseController {
 		let message, methodName = 'postInfo';
 
 		let body = req.body;
+		let acc = req.user;
 
-		const data = `<get_game_info uid=\"${body.uid}\" auth_key=\"${body.auth_key}\" sid=\"${body.sid}\"/>`;
+		const data = `<get_game_info uid=\"${acc.uid}\" auth_key=\"${acc.auth_key}\" sid=\"${acc.sid}\"/>`;
 		this.logger.info(`${this.constructor.name} - ${methodName}:`, data);
 
 		const options = {
@@ -101,9 +111,10 @@ class GameController extends BaseController {
 		.then((data) => {
 			const parseString = require('xml2js').parseString;
 			parseString(data, (err, result) => {
-				this.logger.info(`${this.constructor.name} - ${methodName}:`, JSON.stringify(result));
 				const items = result['response']['init_game'][0]['user'][0]['items'][0];
-				const buildings = result['response']['init_game'][0]['user'][0]['buildings'][0]['building'];
+				const buildings = result['response']['init_game'][0]['user'][0]['buildings'][0]['building']
+					.map((building) => { return { id : building['$']['id'], type : building['$']['type'] }; });
+
 				const resources = {
 					metal : items['metal'][0],
 					crystal : items['crystal'][0],
@@ -121,11 +132,19 @@ class GameController extends BaseController {
 					ecm : items['ecm'][0]
 				};
 
+				const factory = buildings.filter((data) => {
+					return data['type'] === 'factory' || data['type'] === 'space_engineering';
+				});
+				const land = factory[0]['type'] === 'factory' ? factory[0]['id'] : factory[1]['id'];
+				const space = factory[0]['type'] === 'space_engineering' ? factory[0]['id'] : factory[1]['id'];
+
 				if (!result['error']) {
 					message = 'Game info was received';
 					this.sendSuccessResponse(res, 200, {
-						resources : JSON.stringify(resources),
-						armory : JSON.stringify(armory)
+						land : land,
+						space : space,
+						resources : resources,
+						armory : armory
 					}, methodName, message);
 				} else {
 					this.sendErrorResponse(res, new AppError('myNotExist', 400), methodName)
