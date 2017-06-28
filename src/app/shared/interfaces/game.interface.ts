@@ -3,14 +3,14 @@ export interface ISignin {
 	auth_key : string;
 }
 export interface IRSignin {
-	sid : string;
+	token : string;
 }
 
 export interface IAcc extends ISignin, IRSignin {
 }
 export interface IRGameInfo {
-	resources : string;
-	armory : string;
+	resources : IResources;
+	armory : IArmory;
 }
 
 export interface IResources {
