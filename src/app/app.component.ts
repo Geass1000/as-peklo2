@@ -9,6 +9,7 @@ import { AppActions } from './actions/app.actions';
 
 /* App Services */
 import { LoggerService } from './core/logger.service';
+import { GameService } from './core/game.service';
 
 /* App Animations */
 
@@ -27,13 +28,22 @@ export class AppComponent implements OnInit, OnDestroy {
 
 	constructor (private ngRedux : NgRedux<IApp>,
 							 private appActions : AppActions,
-						 	 private logger : LoggerService) {
+						 	 private logger : LoggerService,
+						 	 private gameService : GameService) {
 		this.ngRedux.configureStore(AppReducer, INITIAL_STATE, null, []);
 		this.logger.info(`${this.constructor.name}:`, 'Start app Artificial System!');
+		this.gameService.login();
 	}
 	ngOnInit () {
 	}
 	ngOnDestroy () {
 		this.subscription.map((data) => data.unsubscribe());
+	}
+
+	loggedIn () {
+		return this.gameService.loggedIn();
+	}
+	logout () {
+		this.gameService.logout();
 	}
 }

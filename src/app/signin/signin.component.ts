@@ -66,7 +66,8 @@ export class SigninComponent implements OnInit, OnDestroy {
 		const result : ISignin = <ISignin>Object.assign({}, this.form.value);
 		const sub : Subscription = this.gameService.postSignin(result).subscribe(
 			(data : IRSignin) => {
-				this.ngRedux.dispatch(this.appActions.setAcc(result.uid, result.auth_key, data.sid));
+				this.gameService.login(data.token);
+				//this.ngRedux.dispatch(this.appActions.setAcc(result.uid, result.auth_key, data.sid));
 				this.formError.serverError = '';
 			},
 			(error : string) => {

@@ -1,6 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 import { Headers, Http, Response } from '@angular/http';
-import { AuthHttp } from 'angular2-jwt';
+import { AuthHttp, tokenNotExpired, JwtHelper } from 'angular2-jwt';
 
 import { Config } from '../config';
 
@@ -22,11 +23,13 @@ import { ISignin, IRSignin, IAcc, IRGameInfo } from '../shared/interfaces/game.i
 @Injectable()
 export class GameService implements OnDestroy {
 	private headers = new Headers({ 'Content-Type': 'application/json' });
+	private jwtHelper : JwtHelper;
 
 	/* Redux */
 	private subscription : Array<Subscription> = [];
 
-	constructor (private http : Http,
+	constructor (private router: Router,
+							 private http : Http,
 							 private authHttp : AuthHttp,
 							 private ngRedux : NgRedux<any>,
 							 private logger : LoggerService,
@@ -34,10 +37,62 @@ export class GameService implements OnDestroy {
 		this.init();
 	}
 	init () {
+		this.jwtHelper = new JwtHelper();
 	}
 	ngOnDestroy () {
 		this.subscription.map((data) => data.unsubscribe());
 	}
+
+	/**
+ * login - функция-метод, выполняет вход пользователя в систему.
+ * Выполняет распаковку токена и установку пользовательских данных в хранилище.
+ *
+ * @method
+ *
+ * @param {string} token - jwt-токен
+ * @return {void}
+ */
+login (token ?: string) : void {
+	if (!token && !this.loggedIn()) {
+		this.logger.info(`${this.constructor.name} - login:`, 'User isn\'t logined!');
+		return ;
+	}
+	token = token ? token : localStorage.getItem('token');
+	localStorage.setItem('token', token);
+	try {
+		const decodeToken = this.jwtHelper.decodeToken(token);
+		this.logger.info(`${this.constructor.name} - login:`, 'decodeToken -', decodeToken);
+	} catch (error) {
+		this.logger.warn(`${this.constructor.name} - login:`, 'Token isn\'t exist');
+	}
+}
+
+/**
+ * logout - функция-метод, выполняет выход пользователя из системы.
+ * Выполняет удаление пользовательских данных из хранилища.
+ *
+ * @method
+ *
+ * @return {void}
+ */
+logout () : void {
+	localStorage.removeItem('token');
+}
+
+/**
+ * loggedIn - функция-метод, выполняет проверку: "Находится ли пользователь в системе?".
+ *
+ * @method
+ *
+ * @return {boolean}
+ */
+loggedIn () : boolean {
+	try {
+		return tokenNotExpired('token');
+	} catch (error) {
+		return false;
+	}
+}
 
 	postSignin (value : ISignin) : Observable<IRSignin | string> {
 		const methodName : string = 'postSignin';
@@ -51,12 +106,10 @@ export class GameService implements OnDestroy {
 			.catch<any, string>((error) => this.httpService.handleError(error));
 	}
 
-	postGetInfo (value : IAcc) : Observable<IRGameInfo | string> {
+	postGetInfo () : Observable<IRGameInfo | string> {
 		const methodName : string = 'postSignin';
 
-		const body : string = JSON.stringify(value);
-
-		return this.http.post(Config.gameUrl + 'info', body, { headers : this.headers })
+		return this.authHttp.post(Config.gameUrl + 'info', null, { headers : this.headers })
 			.map<Response, IRGameInfo>((resp : Response) => {
 				return this.httpService.mapData<IRGameInfo>(resp, this.constructor.name, methodName);
 			})
