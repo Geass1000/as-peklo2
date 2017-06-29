@@ -117,27 +117,29 @@ class GameController extends BaseController {
 						.map((building) => { return { id : building['$']['id'], type : building['$']['type'] }; });
 
 					const resources = {
-						metal : items['metal'][0],
-						crystal : items['crystal'][0],
-						cordite : items['cordite'][0],
-						fuel : items['fuel'][0]
+						metal 	: items['metal'] ? items['metal'][0] : null,
+						crystal : items['crystal'] ? items['crystal'][0] : null,
+						cordite : items['cordite'] ? items['cordite'][0] : null,
+						fuel 		: items['fuel'] ? items['fuel'][0] : null
 					};
 					const armory = {
-						air_strike : items['air_strike'][0],
-						medicaments : items['medicaments'][0],
-						gravibomb : items['gravibomb'][0],
-						shields : items['shields'][0],
-						space_mines : items['space_mines'][0],
-						repair_drones : items['repair_drones'][0],
-						adaptive_shield : items['adaptive_shield'][0],
-						ecm : items['ecm'][0]
+						air_strike 			: items['air_strike'] ? items['air_strike'][0] : null,
+						medicaments 		: items['medicaments'] ? items['medicaments'][0] : null,
+						gravibomb 			: items['gravibomb'] ? items['gravibomb'][0] : null,
+						shields 				: items['shields'] ? items['shields'][0] : null,
+						space_mines 		: items['space_mines'] ? items['space_mines'][0] : null,
+						repair_drones 	: items['repair_drones'] ? items['repair_drones'][0] : null,
+						adaptive_shield : items['adaptive_shield'] ? items['adaptive_shield'][0] : null,
+						ecm 						: items['ecm'] ? items['ecm'][0] : null
 					};
 
-					const factory = buildings.filter((data) => {
-						return data['type'] === 'factory' || data['type'] === 'space_engineering';
+					let land = null, space = null;
+					buildings.map((data) => {
+						switch (data['type']) {
+							case 'factory': land = data['id']; break;
+							case 'space_engineering': space = data['id']; break;
+						}
 					});
-					const land = factory[0]['type'] === 'factory' ? factory[0]['id'] : factory[1]['id'];
-					const space = factory[0]['type'] === 'space_engineering' ? factory[0]['id'] : factory[1]['id'];
 
 					message = 'Game info was received';
 					this.sendSuccessResponse(res, 200, {
