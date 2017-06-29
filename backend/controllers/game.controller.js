@@ -88,7 +88,7 @@ class GameController extends BaseController {
 	 * @return {void}
 	 */
 	postGetInfo (req, res) {
-		let message, methodName = 'postInfo';
+		let message, methodName = 'postGetInfo';
 
 		let body = req.body;
 		let acc = req.user;
@@ -111,34 +111,34 @@ class GameController extends BaseController {
 		.then((data) => {
 			const parseString = require('xml2js').parseString;
 			parseString(data, (err, result) => {
-				const items = result['response']['init_game'][0]['user'][0]['items'][0];
-				const buildings = result['response']['init_game'][0]['user'][0]['buildings'][0]['building']
-					.map((building) => { return { id : building['$']['id'], type : building['$']['type'] }; });
-
-				const resources = {
-					metal : items['metal'][0],
-					crystal : items['crystal'][0],
-					cordite : items['cordite'][0],
-					fuel : items['fuel'][0]
-				};
-				const armory = {
-					air_strike : items['air_strike'][0],
-					medicaments : items['medicaments'][0],
-					gravibomb : items['gravibomb'][0],
-					shields : items['shields'][0],
-					space_mines : items['space_mines'][0],
-					repair_drones : items['repair_drones'][0],
-					adaptive_shield : items['adaptive_shield'][0],
-					ecm : items['ecm'][0]
-				};
-
-				const factory = buildings.filter((data) => {
-					return data['type'] === 'factory' || data['type'] === 'space_engineering';
-				});
-				const land = factory[0]['type'] === 'factory' ? factory[0]['id'] : factory[1]['id'];
-				const space = factory[0]['type'] === 'space_engineering' ? factory[0]['id'] : factory[1]['id'];
-
 				if (!result['error']) {
+					const items = result['response']['init_game'][0]['user'][0]['items'][0];
+					const buildings = result['response']['init_game'][0]['user'][0]['buildings'][0]['building']
+						.map((building) => { return { id : building['$']['id'], type : building['$']['type'] }; });
+
+					const resources = {
+						metal : items['metal'][0],
+						crystal : items['crystal'][0],
+						cordite : items['cordite'][0],
+						fuel : items['fuel'][0]
+					};
+					const armory = {
+						air_strike : items['air_strike'][0],
+						medicaments : items['medicaments'][0],
+						gravibomb : items['gravibomb'][0],
+						shields : items['shields'][0],
+						space_mines : items['space_mines'][0],
+						repair_drones : items['repair_drones'][0],
+						adaptive_shield : items['adaptive_shield'][0],
+						ecm : items['ecm'][0]
+					};
+
+					const factory = buildings.filter((data) => {
+						return data['type'] === 'factory' || data['type'] === 'space_engineering';
+					});
+					const land = factory[0]['type'] === 'factory' ? factory[0]['id'] : factory[1]['id'];
+					const space = factory[0]['type'] === 'space_engineering' ? factory[0]['id'] : factory[1]['id'];
+
 					message = 'Game info was received';
 					this.sendSuccessResponse(res, 200, {
 						land : land,
@@ -147,7 +147,7 @@ class GameController extends BaseController {
 						armory : armory
 					}, methodName, message);
 				} else {
-					this.sendErrorResponse(res, new AppError('myNotExist', 400), methodName)
+					this.sendErrorResponse(res, new AppError('myNotAuth', 401), methodName)
 				}
 			});
 		});
