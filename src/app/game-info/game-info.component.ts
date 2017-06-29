@@ -66,6 +66,7 @@ export class GameInfoComponent implements OnInit, OnDestroy {
 				this.ngRedux.dispatch(this.appActions.setArmory(data.armory));
 			},
 			(error : string) => {
+				this.logger.info(`${this.constructor.name} - getInfo:`, error);
 			}
 		);
 		this.subscription.push(sub);
