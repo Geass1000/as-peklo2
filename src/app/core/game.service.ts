@@ -11,6 +11,8 @@ import { Subscription } from 'rxjs/Subscription';
 import { NgRedux } from '@angular-redux/store';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/retryWhen';
+import 'rxjs/add/operator/delayWhen';
 import 'rxjs/add/observable/throw';
 
 /* App Services */
@@ -44,55 +46,71 @@ export class GameService implements OnDestroy {
 	}
 
 	/**
- * login - функция-метод, выполняет вход пользователя в систему.
- * Выполняет распаковку токена и установку пользовательских данных в хранилище.
- *
- * @method
- *
- * @param {string} token - jwt-токен
- * @return {void}
- */
-login (token ?: string) : void {
-	if (!token && !this.loggedIn()) {
-		this.logger.info(`${this.constructor.name} - login:`, 'User isn\'t logined!');
-		return ;
+	 * login - функция-метод, выполняет вход пользователя в систему.
+	 * Выполняет распаковку токена и установку пользовательских данных в хранилище.
+	 *
+	 * @method
+	 *
+	 * @param {string} token - jwt-токен
+	 * @return {void}
+	 */
+	login (token ?: string) : void {
+		if (!token && !this.loggedIn()) {
+			this.logger.info(`${this.constructor.name} - login:`, 'User isn\'t logined!');
+			return ;
+		}
+		token = token ? token : localStorage.getItem('token');
+		localStorage.setItem('token', token);
+		try {
+			const decodeToken = this.jwtHelper.decodeToken(token);
+			this.logger.info(`${this.constructor.name} - login:`, 'decodeToken -', decodeToken);
+		} catch (error) {
+			this.logger.warn(`${this.constructor.name} - login:`, 'Token isn\'t exist');
+		}
 	}
-	token = token ? token : localStorage.getItem('token');
-	localStorage.setItem('token', token);
-	try {
+
+	/**
+	 * logout - функция-метод, выполняет выход пользователя из системы.
+	 * Выполняет удаление пользовательских данных из хранилища.
+	 *
+	 * @method
+	 *
+	 * @return {void}
+	 */
+	logout () : void {
+		localStorage.removeItem('token');
+	}
+
+	/**
+	 * loggedIn - функция-метод, выполняет проверку: "Находится ли пользователь в системе?".
+	 *
+	 * @method
+	 *
+	 * @return {boolean}
+	 */
+	loggedIn () : boolean {
+		try {
+			return tokenNotExpired('token');
+		} catch (error) {
+			return false;
+		}
+	}
+
+	postLogin () : Observable<IRSignin | string> {
+		const methodName : string = 'postLogin';
+
+		const token = localStorage.getItem('token');
 		const decodeToken = this.jwtHelper.decodeToken(token);
-		this.logger.info(`${this.constructor.name} - login:`, 'decodeToken -', decodeToken);
-	} catch (error) {
-		this.logger.warn(`${this.constructor.name} - login:`, 'Token isn\'t exist');
-	}
-}
+		const value : ISignin = {
+			uid : decodeToken.uid,
+			auth_key : decodeToken.auth_key
+		};
 
-/**
- * logout - функция-метод, выполняет выход пользователя из системы.
- * Выполняет удаление пользовательских данных из хранилища.
- *
- * @method
- *
- * @return {void}
- */
-logout () : void {
-	localStorage.removeItem('token');
-}
-
-/**
- * loggedIn - функция-метод, выполняет проверку: "Находится ли пользователь в системе?".
- *
- * @method
- *
- * @return {boolean}
- */
-loggedIn () : boolean {
-	try {
-		return tokenNotExpired('token');
-	} catch (error) {
-		return false;
+		const obs : Observable<IRSignin | string> = this.postSignin(value);
+		const sub : Subscription = obs.subscribe((data : IRSignin) => this.login(data.token));
+		this.subscription.push(sub);
+		return obs;
 	}
-}
 
 	postSignin (value : ISignin) : Observable<IRSignin | string> {
 		const methodName : string = 'postSignin';
@@ -107,11 +125,14 @@ loggedIn () : boolean {
 	}
 
 	postGetInfo () : Observable<IRGameInfo | string> {
-		const methodName : string = 'postSignin';
+		const methodName : string = 'postGetInfo';
 
 		return this.authHttp.post(Config.gameUrl + 'info', null, { headers : this.headers })
 			.map<Response, IRGameInfo>((resp : Response) => {
 				return this.httpService.mapData<IRGameInfo>(resp, this.constructor.name, methodName);
+			})
+			.retryWhen((errObs : any) => {
+				return errObs.delayWhen(val => this.postLogin());
 			})
 			.catch<any, string>((error) => this.httpService.handleError(error));
 	}
