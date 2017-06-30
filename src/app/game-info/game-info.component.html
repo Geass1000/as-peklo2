@@ -1,12 +1,82 @@
 <section class="base-section">
 	<div class="base-block page-block game-info-block">
 		<div class="resources-block" *ngIf="stateResources">
-			<h1>Металл: {{stateResources.metal}}</h1>
-			<h1>Кристалл: {{stateResources.crystal}}</h1>
-			<h1>Кордит: {{stateResources.cordite}}</h1>
-			<h1>Топлива: {{stateResources.fuel}}</h1>
+			<div class="resource-block" [style.background-image]="getUrlResouce('metal')">
+				<div class="description">
+					<div class="name">Металл</div>
+					<div class="amount">{{getValue(stateResources.metal)}}</div>
+				</div>
+			</div>
+			<div class="resource-block" [style.background-image]="getUrlResouce('crystallite')">
+				<div class="description">
+					<div class="name">Кристалл</div>
+					<div class="amount">{{getValue(stateResources.crystal)}}</div>
+				</div>
+			</div>
+			<div class="resource-block" [style.background-image]="getUrlResouce('cordite')">
+				<div class="description">
+					<div class="name">Кордит</div>
+					<div class="amount">{{getValue(stateResources.cordite)}}</div>
+				</div>
+			</div>
+			<div class="resource-block" [style.background-image]="getUrlResouce('fuel')">
+				<div class="description">
+					<div class="name">Топливо</div>
+					<div class="amount">{{getValue(stateResources.fuel)}}</div>
+				</div>
+			</div>
 		</div>
-		<div class="resources-block" *ngIf="stateArmory">
+		<div class="armories-block" *ngIf="stateArmory">
+			<div class="armory-block" [style.background-image]="getUrlArmory('air_strike')">
+				<div class="description">
+					<div class="name">Арт. удары</div>
+					<div class="amount">{{getValue(stateArmory.air_strike)}}</div>
+					<input type="text" />
+				</div>
+			</div>
+			<div class="armory-block" [style.background-image]="getUrlArmory('medicaments')">
+				<div class="description">
+					<div class="name">Медикаменты</div>
+					<div class="amount">{{getValue(stateArmory.medicaments)}}</div>
+				</div>
+			</div>
+			<div class="armory-block" [style.background-image]="getUrlArmory('gravibomb')">
+				<div class="description">
+					<div class="name">Гравибомбы</div>
+					<div class="amount">{{getValue(stateArmory.gravibomb)}}</div>
+				</div>
+			</div>
+			<div class="armory-block" [style.background-image]="getUrlArmory('shields')">
+				<div class="description">
+					<div class="name">Щиты</div>
+					<div class="amount">{{getValue(stateArmory.shields)}}</div>
+				</div>
+			</div>
+			<div class="armory-block" [style.background-image]="getUrlArmory('space_mines')">
+				<div class="description">
+					<div class="name">Космические мины</div>
+					<div class="amount">{{getValue(stateArmory.space_mines)}}</div>
+				</div>
+			</div>
+			<div class="armory-block" [style.background-image]="getUrlArmory('repair_drones')">
+				<div class="description">
+					<div class="name">Ремонтные дроиды</div>
+					<div class="amount">{{getValue(stateArmory.repair_drones)}}</div>
+				</div>
+			</div>
+			<div class="armory-block" [style.background-image]="getUrlArmory('adaptive_shield')">
+				<div class="description">
+					<div class="name">Адаптивные щиты</div>
+					<div class="amount">{{getValue(stateArmory.adaptive_shield)}}</div>
+				</div>
+			</div>
+			<div class="armory-block" [style.background-image]="getUrlArmory('ecm')">
+				<div class="description">
+					<div class="name">Эхо</div>
+					<div class="amount">{{getValue(stateArmory.ecm)}}</div>
+				</div>
+			</div>
+		<!--
 			<h1>Арт. удар: {{stateArmory.air_strike}}</h1>
 			<h1>Медикаменты: {{stateArmory.medicaments}}</h1>
 			<h1>Гравибомбы: {{stateArmory.gravibomb}}</h1>
@@ -15,6 +85,7 @@
 			<h1>Рем. боты: {{stateArmory.repair_drones}}</h1>
 			<h1>Адаптивное покрытие: {{stateArmory.adaptive_shield}}</h1>
 			<h1>Ловушка: {{stateArmory.ecm}}</h1>
+		-->
 		</div>
 	</div>
 </section>

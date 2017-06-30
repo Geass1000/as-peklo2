@@ -54,6 +54,36 @@ export class GameInfoComponent implements OnInit, OnDestroy {
 	}
 
 	/**
+	 * getUrlResouce - выполняет формирование URL изображения ресурсов.
+	 *
+	 * @kind {event}
+	 * @return {void}
+	 */
+	getUrlResouce (str : string) : string {
+		return `url('./assets/imgs/resources/${str}_big.png')`;
+	}
+
+	/**
+	 * getUrlResouce - выполняет формирование URL изображения ресурсов.
+	 *
+	 * @kind {event}
+	 * @return {void}
+	 */
+	getUrlArmory (str : string) : string {
+		return `url('./assets/imgs/armory/${str}_big.png')`;
+	}
+
+	/**
+	 * getUrlResouce - выполняет формирование URL изображения ресурсов.
+	 *
+	 * @kind {event}
+	 * @return {void}
+	 */
+	getValue (str : string) : number {
+		return +str;
+	}
+
+	/**
 	 * onSubmit - функция-событие, выполняет вход пользователя в систему.
 	 *
 	 * @kind {event}
