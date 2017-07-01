@@ -20,7 +20,7 @@ import { LoggerService } from './logger.service';
 import { HttpService } from './http.service';
 
 /* App Interfaces and Classes */
-import { ISignin, IRSignin, IAcc, IRGameInfo } from '../shared/interfaces/game.interface';
+import { ISignin, IRSignin, IAcc, IRGameInfo, IGameArmory, IRGameArmory } from '../shared/interfaces/game.interface';
 
 @Injectable()
 export class GameService implements OnDestroy {
@@ -96,6 +96,15 @@ export class GameService implements OnDestroy {
 		}
 	}
 
+	/**
+		* postLogin - функция-репитер, выполняет повторный вход в систему, если
+		* пользователь уже входил на данном компьютере.
+		*
+		* @method
+		*
+		* @param {string} userId - id пользователя (уникальный)
+		* @return {Observable<IRSignin>}
+		*/
 	postLogin () : Observable<IRSignin | string> {
 		const methodName : string = 'postLogin';
 
@@ -112,6 +121,14 @@ export class GameService implements OnDestroy {
 		return obs;
 	}
 
+	/**
+		* postSignin - функция-запрос, выполняет повторный вход в систему.
+		*
+		* @method
+		*
+		* @param {ISignin} value - данные с uid и auth_key
+		* @return {Observable<IRSignin>}
+		*/
 	postSignin (value : ISignin) : Observable<IRSignin | string> {
 		const methodName : string = 'postSignin';
 
@@ -124,12 +141,41 @@ export class GameService implements OnDestroy {
 			.catch<any, string>((error) => this.httpService.handleError(error));
 	}
 
+	/**
+		* postGetInfo - функция-запрос, выполняет получение данных аккаунта игры.
+		*
+		* @method
+		*
+		* @return {Observable<IRGameInfo>}
+		*/
 	postGetInfo () : Observable<IRGameInfo | string> {
 		const methodName : string = 'postGetInfo';
 
 		return this.authHttp.post(Config.gameUrl + 'info', null, { headers : this.headers })
 			.map<Response, IRGameInfo>((resp : Response) => {
 				return this.httpService.mapData<IRGameInfo>(resp, this.constructor.name, methodName);
+			})
+			.retryWhen((errObs : any) => {
+				return errObs.delayWhen(val => this.postLogin());
+			})
+			.catch<any, string>((error) => this.httpService.handleError(error));
+	}
+
+	/**
+		* postGetInfo - функция-запрос, выполняет получение данных аккаунта игры.
+		*
+		* @method
+		*
+		* @return {Observable<IRGameInfo>}
+		*/
+	postGetArmory (value : IGameArmory) : Observable<IRGameArmory | string> {
+		const methodName : string = 'postGetInfo';
+
+		const body : string = JSON.stringify(value);
+
+		return this.authHttp.post(Config.gameUrl + 'armory', body, { headers : this.headers })
+			.map<Response, IRGameArmory>((resp : Response) => {
+				return this.httpService.mapData<IRGameArmory>(resp, this.constructor.name, methodName);
 			})
 			.retryWhen((errObs : any) => {
 				return errObs.delayWhen(val => this.postLogin());
