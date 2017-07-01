@@ -13,7 +13,7 @@ import { GameService } from '../core/game.service';
 
 /* App Interfaces and Classes */
 import { IState } from '../reducers/state.reducer';
-import { IRGameInfo, IResources, IArmory, ICostArmory, ICost } from '../shared/interfaces/game.interface';
+import { IRGameInfo, IResources, IArmory, ICostArmory, ICost, IRGameArmory, IGameArmory } from '../shared/interfaces/game.interface';
 
 /* App Validators */
 import { isNumber } from '../shared/validators/is-number.validator';
@@ -58,6 +58,9 @@ export class GameInfoComponent implements OnInit, OnDestroy {
 	public stateResources : IResources;
 	@select(['state', 'armory']) stateArmory$ : Observable<IArmory>;
 	public stateArmory : IArmory;
+
+	private land : string;
+	private space : string;
 
 	constructor (private fb : FormBuilder,
 						 	 private ngRedux : NgRedux<any>,
@@ -168,6 +171,8 @@ export class GameInfoComponent implements OnInit, OnDestroy {
 			(data : IRGameInfo) => {
 				this.ngRedux.dispatch(this.appActions.setResources(data.resources));
 				this.ngRedux.dispatch(this.appActions.setArmory(data.armory));
+				this.land = data.land;
+				this.space = data.space;
 			},
 			(error : string) => {
 				this.logger.info(`${this.constructor.name} - getInfo:`, error);
@@ -199,5 +204,20 @@ export class GameInfoComponent implements OnInit, OnDestroy {
 
 		const result : IArmory = <IArmory>Object.assign({}, this.form.value);
 		this.logger.info(`${this.constructor.name} - ${methodName}:`, result);
+
+		const value = {
+			land : this.land,
+			space : this.space,
+			armory : result
+		}
+		const sub : Subscription = this.gameService.postGetArmory(value).subscribe(
+			(data : IRGameArmory) => {
+				this.logger.info(`${this.constructor.name} - ${methodName}:`, data);
+			},
+			(error : string) => {
+				this.logger.info(`${this.constructor.name} - getInfo:`, error);
+			}
+		);
+		this.subscription.push(sub);
 	}
 }

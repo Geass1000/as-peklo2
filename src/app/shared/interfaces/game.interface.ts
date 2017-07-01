@@ -11,6 +11,8 @@ export interface IAcc extends ISignin, IRSignin {
 export interface IRGameInfo {
 	resources : IResources;
 	armory : IArmory;
+	land : string;
+	space : string;
 }
 
 export interface IResources {
@@ -44,4 +46,13 @@ export interface ICostArmory {
 	repair_drones : ICost;
 	adaptive_shield : ICost;
 	ecm : ICost;
+}
+
+export interface IGameArmory {
+	armory : IArmory;
+	land : string;
+	space : string;
+}
+export interface IRGameArmory {
+	id : string;
 }
