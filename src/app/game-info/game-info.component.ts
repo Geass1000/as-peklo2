@@ -48,6 +48,7 @@ const costArmory : ICostArmory = {
 })
 export class GameInfoComponent implements OnInit, OnDestroy {
 	public balance : IResources;
+	public resultArmory : IArmory;
 	form : FormGroup;
 
 	/* Redux */
@@ -71,6 +72,7 @@ export class GameInfoComponent implements OnInit, OnDestroy {
 			this.balance = Object.assign({}, data);
 		}));
 		this.subscription.push(this.stateArmory$.subscribe((data) => {
+			this.resultArmory = Object.assign({}, data);
 			this.stateArmory = Object.assign({}, data);
 		}));
 		this.getInfo();
@@ -113,6 +115,7 @@ export class GameInfoComponent implements OnInit, OnDestroy {
 		}
 
 		this.balance = Object.assign({}, this.stateResources);
+		this.resultArmory = Object.assign({}, this.stateArmory);
 		const result : IArmory = <IArmory>Object.assign({}, this.form.value);
 		this.logger.info(`${this.constructor.name} - ${methodName}:`, result);
 
@@ -120,6 +123,7 @@ export class GameInfoComponent implements OnInit, OnDestroy {
 			const value : number = +result[prop];
 			const cost : ICost = costArmory[prop];
 		  this.balance[cost.type] -= cost.cost * value;
+			this.resultArmory[prop] = (+this.resultArmory[prop] + 5 * value).toString();
 		}
   }
 

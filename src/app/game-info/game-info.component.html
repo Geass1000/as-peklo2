@@ -42,7 +42,7 @@
 			<div class="armory-block" [style.background-image]="getUrlArmory('air_strike')">
 				<div class="description">
 					<div class="name">Арт. удары</div>
-					<div class="amount">{{getValue(stateArmory.air_strike)}}</div>
+					<div class="amount">{{getValue(stateArmory.air_strike)}} → {{getValue(resultArmory.air_strike)}}</div>
 					<input type="text" *ngIf="stateArmory.air_strike !== null"
 						formControlName="air_strike" id="air_strike" name="air_strike" />
 				</div>
@@ -50,7 +50,7 @@
 			<div class="armory-block" [style.background-image]="getUrlArmory('medicaments')">
 				<div class="description">
 					<div class="name">Медикаменты</div>
-					<div class="amount">{{getValue(stateArmory.medicaments)}}</div>
+					<div class="amount">{{getValue(stateArmory.medicaments)}} → {{getValue(resultArmory.medicaments)}}</div>
 					<input type="text" *ngIf="stateArmory.medicaments !== null"
 						formControlName="medicaments" id="medicaments" name="medicaments" />
 				</div>
@@ -58,7 +58,7 @@
 			<div class="armory-block" [style.background-image]="getUrlArmory('gravibomb')">
 				<div class="description">
 					<div class="name">Гравибомбы</div>
-					<div class="amount">{{getValue(stateArmory.gravibomb)}}</div>
+					<div class="amount">{{getValue(stateArmory.gravibomb)}} → {{getValue(resultArmory.gravibomb)}}</div>
 					<input type="text" *ngIf="stateArmory.gravibomb !== null"
 						formControlName="gravibomb" id="gravibomb" name="gravibomb" />
 				</div>
@@ -66,7 +66,7 @@
 			<div class="armory-block" [style.background-image]="getUrlArmory('shields')">
 				<div class="description">
 					<div class="name">Щиты</div>
-					<div class="amount">{{getValue(stateArmory.shields)}}</div>
+					<div class="amount">{{getValue(stateArmory.shields)}} → {{getValue(resultArmory.shields)}}</div>
 					<input type="text" *ngIf="stateArmory.shields !== null"
 						formControlName="shields" id="shields" name="shields" />
 				</div>
@@ -74,7 +74,7 @@
 			<div class="armory-block" [style.background-image]="getUrlArmory('space_mines')">
 				<div class="description">
 					<div class="name">Космические мины</div>
-					<div class="amount">{{getValue(stateArmory.space_mines)}}</div>
+					<div class="amount">{{getValue(stateArmory.space_mines)}} → {{getValue(resultArmory.space_mines)}}</div>
 					<input type="text" *ngIf="stateArmory.space_mines !== null"
 						formControlName="space_mines" id="space_mines" name="space_mines" />
 				</div>
@@ -82,7 +82,7 @@
 			<div class="armory-block" [style.background-image]="getUrlArmory('repair_drones')">
 				<div class="description">
 					<div class="name">Ремонтные дроиды</div>
-					<div class="amount">{{getValue(stateArmory.repair_drones)}}</div>
+					<div class="amount">{{getValue(stateArmory.repair_drones)}} → {{getValue(resultArmory.repair_drones)}}</div>
 					<input type="text" *ngIf="stateArmory.repair_drones !== null"
 						formControlName="repair_drones" id="repair_drones" name="repair_drones" />
 				</div>
@@ -90,7 +90,7 @@
 			<div class="armory-block" [style.background-image]="getUrlArmory('adaptive_shield')">
 				<div class="description">
 					<div class="name">Адаптивные щиты</div>
-					<div class="amount">{{getValue(stateArmory.adaptive_shield)}}</div>
+					<div class="amount">{{getValue(stateArmory.adaptive_shield)}} → {{getValue(resultArmory.adaptive_shield)}}</div>
 					<input type="text" *ngIf="stateArmory.adaptive_shield !== null"
 						formControlName="adaptive_shield" id="adaptive_shield" name="adaptive_shield" />
 				</div>
@@ -98,7 +98,7 @@
 			<div class="armory-block" [style.background-image]="getUrlArmory('ecm')">
 				<div class="description">
 					<div class="name">Эхо</div>
-					<div class="amount">{{getValue(stateArmory.ecm)}}</div>
+					<div class="amount">{{getValue(stateArmory.ecm)}} → {{getValue(resultArmory.ecm)}}</div>
 					<input type="text" *ngIf="stateArmory.ecm !== null"
 						formControlName="ecm" id="ecm" name="ecm" />
 				</div>
