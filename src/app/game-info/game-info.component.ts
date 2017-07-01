@@ -15,6 +15,17 @@ import { GameService } from '../core/game.service';
 import { IState } from '../reducers/state.reducer';
 import { IRGameInfo, IResources, IArmory } from '../shared/interfaces/game.interface';
 
+const initModel : IArmory = {
+	air_strike : '0',
+	medicaments : '0',
+	gravibomb : '0',
+	shields : '0',
+	space_mines : '0',
+	repair_drones : '0',
+	adaptive_shield : '0',
+	ecm : '0'
+};
+
 @Component({
 	moduleId: module.id,
 	selector: 'as-game-info',
@@ -25,6 +36,7 @@ export class GameInfoComponent implements OnInit, OnDestroy {
 	public metal : string;
 	public cristal : string;
 	public cordit : string;
+	public model : IArmory;
 
 	/* Redux */
 	private subscription : Array<Subscription> = [];
@@ -48,6 +60,7 @@ export class GameInfoComponent implements OnInit, OnDestroy {
 			this.stateArmory = data;
 		}));
 		this.getInfo();
+		this.model = Object.assign({}, initModel);
   }
 	ngOnDestroy () : void {
 		this.subscription.map((data) => data.unsubscribe());
@@ -100,5 +113,10 @@ export class GameInfoComponent implements OnInit, OnDestroy {
 			}
 		);
 		this.subscription.push(sub);
+	}
+
+	onClickOrder () : void {
+		const methodName : string = 'onClickOrder';
+		this.logger.info(`${this.constructor.name} - onClickOrder:`, this.model);
 	}
 }

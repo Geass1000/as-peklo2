@@ -31,51 +31,59 @@
 				<div class="description">
 					<div class="name">Арт. удары</div>
 					<div class="amount">{{getValue(stateArmory.air_strike)}}</div>
-					<input type="text" />
+					<input type="text" [(ngModel)]="model.air_strike" id="air_strike" name="air_strike" />
 				</div>
 			</div>
 			<div class="armory-block" [style.background-image]="getUrlArmory('medicaments')">
 				<div class="description">
 					<div class="name">Медикаменты</div>
 					<div class="amount">{{getValue(stateArmory.medicaments)}}</div>
+					<input type="text" [(ngModel)]="model.medicaments" id="medicaments" name="medicaments" />
 				</div>
 			</div>
 			<div class="armory-block" [style.background-image]="getUrlArmory('gravibomb')">
 				<div class="description">
 					<div class="name">Гравибомбы</div>
 					<div class="amount">{{getValue(stateArmory.gravibomb)}}</div>
+					<input type="text" [(ngModel)]="model.gravibomb" id="gravibomb" name="gravibomb" />
 				</div>
 			</div>
 			<div class="armory-block" [style.background-image]="getUrlArmory('shields')">
 				<div class="description">
 					<div class="name">Щиты</div>
 					<div class="amount">{{getValue(stateArmory.shields)}}</div>
+					<input type="text" [(ngModel)]="model.shields" id="shields" name="shields" />
 				</div>
 			</div>
 			<div class="armory-block" [style.background-image]="getUrlArmory('space_mines')">
 				<div class="description">
 					<div class="name">Космические мины</div>
 					<div class="amount">{{getValue(stateArmory.space_mines)}}</div>
+					<input type="text" [(ngModel)]="model.space_mines" id="space_mines" name="space_mines" />
 				</div>
 			</div>
 			<div class="armory-block" [style.background-image]="getUrlArmory('repair_drones')">
 				<div class="description">
 					<div class="name">Ремонтные дроиды</div>
 					<div class="amount">{{getValue(stateArmory.repair_drones)}}</div>
+					<input type="text" [(ngModel)]="model.repair_drones" id="repair_drones" name="repair_drones" />
 				</div>
 			</div>
 			<div class="armory-block" [style.background-image]="getUrlArmory('adaptive_shield')">
 				<div class="description">
 					<div class="name">Адаптивные щиты</div>
 					<div class="amount">{{getValue(stateArmory.adaptive_shield)}}</div>
+					<input type="text" [(ngModel)]="model.adaptive_shield" id="adaptive_shield" name="adaptive_shield" />
 				</div>
 			</div>
 			<div class="armory-block" [style.background-image]="getUrlArmory('ecm')">
 				<div class="description">
 					<div class="name">Эхо</div>
 					<div class="amount">{{getValue(stateArmory.ecm)}}</div>
+					<input type="text" [(ngModel)]="model.ecm" id="ecm" name="ecm" />
 				</div>
 			</div>
+			<button type="button" class="order" (click)="onClickOrder()">Заказать</button>
 		<!--
 			<h1>Арт. удар: {{stateArmory.air_strike}}</h1>
 			<h1>Медикаменты: {{stateArmory.medicaments}}</h1>
