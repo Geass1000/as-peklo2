@@ -16,6 +16,7 @@ let jwtCheck = jwt({
 //... Project
 router.route('/account').post(GameController.postSignin.bind(GameController));
 router.route('/info').post(jwtCheck, GameController.postGetInfo.bind(GameController));
+router.route('/armory').post(jwtCheck, GameController.postGetArmory.bind(GameController));
 
 //... other paths
 
