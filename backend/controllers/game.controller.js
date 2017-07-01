@@ -44,17 +44,7 @@ class GameController extends BaseController {
 		const data = `<auth uid=\"${body.uid}\" auth_key=\"${body.auth_key}\"/>`;
 		this.logger.info(`${this.constructor.name} - ${methodName}:`, data);
 
-		const options = {
-		  host : 'game-r02vk.rjgplay.com',
-		  port : 80,
-		  path : '/auth/',
-		  method : 'POST',
-			headers : {
-				'Content-Type' : 'application/x-www-form-urlencoded',
-				'Content-Length' : Buffer.byteLength(data)
-			}
-		};
-
+		const options = this.getOption('/auth/', data);
 		this.postRequest(data, options)
 		.then((data) => {
 			const parseString = require('xml2js').parseString;
@@ -96,17 +86,7 @@ class GameController extends BaseController {
 		const data = `<get_game_info uid=\"${acc.uid}\" auth_key=\"${acc.auth_key}\" sid=\"${acc.sid}\"/>`;
 		this.logger.info(`${this.constructor.name} - ${methodName}:`, data);
 
-		const options = {
-		  host : 'game-r02vk.rjgplay.com',
-		  port : 80,
-		  path : '/command/',
-		  method : 'POST',
-			headers : {
-				'Content-Type' : 'application/x-www-form-urlencoded',
-				'Content-Length' : Buffer.byteLength(data)
-			}
-		};
-
+		const options = this.getOption('/command/', data);
 		this.postRequest(data, options)
 		.then((data) => {
 			const parseString = require('xml2js').parseString;
@@ -155,10 +135,71 @@ class GameController extends BaseController {
 		});
 	}
 
+	postGetArmory (req, res) {
+		let message, methodName = 'postGetArmory';
+
+		let body = req.body;
+		let acc = req.user;
+
+		const armory = body.armory;
+		const land = [ 'air_strike', 'medicaments', 'gravibomb', 'shields' ];
+
+		for (let prop in armory) {
+			const count = +armory[prop];
+			if (count === 0) {
+				continue;
+			}
+
+			const building = land.indexOf(prop) === -1 ? body.space : body.land;
+			const dataStartContract = `<start_contract uid=\"${acc.uid}\" auth_key=\"${acc.auth_key}\" sid=\"${acc.sid}\">` +
+				`<building_id>${building}</building_id>` +
+				`<type>produce_${prop}</type>` +
+				`</start_contract>`;
+			this.logger.info(`${this.constructor.name} - ${methodName}:`, dataStartContract);
+
+			const optionsStartContract = this.getOption('/command/', dataStartContract);
+			this.postRequest(dataStartContract, optionsStartContract)
+			.then((data) => {
+				const parseString = require('xml2js').parseString;
+				parseString(data, (err, result) => {
+					this.logger.info(`${this.constructor.name} - ${methodName}:`, 'Start Contract', JSON.stringify(result));
+					const contractId = result['response']['contract_started'][0]['_'];
+					const dataCollectContract = `<collect_contract uid=\"${acc.uid}\" auth_key=\"${acc.auth_key}\" sid=\"${acc.sid}\">` +
+						`<id>${contractId}</id>` +
+						`</collect_contract>`;
+					this.logger.info(`${this.constructor.name} - ${methodName}:`, 'Data Contract', dataCollectContract);
+					const optionsCollectContract = this.getOption('/command/', dataCollectContract);
+					this.postRequest(dataCollectContract, optionsCollectContract)
+					.then((data) => {
+						this.logger.info(`${this.constructor.name} - ${methodName}:`, 'Collect Contract', data);
+						req.body.armory[prop] = (count - 1).toString();
+						this.postGetArmory(req, res);
+					});
+				});
+			});
+			return;
+		}
+		this.sendSuccessResponse(res, 200, { }, methodName, message);
+	}
+
+	getOption (path, data) {
+		return {
+		  host : 'game-r02vk.rjgplay.com',
+		  port : 80,
+		  path : path,
+		  method : 'POST',
+			headers : {
+				'Content-Type' : 'application/x-www-form-urlencoded',
+				'Content-Length' : Buffer.byteLength(data)
+			}
+		};
+	}
+
 	postRequest (data, options) {
 		let resp = '';
 		return new Promise((resolve, reject) => {
 			const req = http.request(options, (res) => {
+				this.logger.info(`DATA: ${data}`);
 			  this.logger.info(`STATUS: ${res.statusCode}`);
 			  this.logger.info(`HEADERS: ${JSON.stringify(res.headers)}`);
 			  res.setEncoding('utf8');
