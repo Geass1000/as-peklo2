@@ -29,3 +29,19 @@ export interface IArmory {
 	adaptive_shield : string;
 	ecm : string;
 }
+
+export interface ICost {
+	type : string;
+	cost : number;
+}
+
+export interface ICostArmory {
+	air_strike : ICost;
+	medicaments : ICost;
+	gravibomb : ICost;
+	shields : ICost;
+	space_mines : ICost;
+	repair_drones : ICost;
+	adaptive_shield : ICost;
+	ecm : ICost;
+}
