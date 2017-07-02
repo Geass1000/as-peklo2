@@ -1,7 +1,12 @@
+@import '../../assets/scss/global.scss';
+
 .signin-block {
 	width: 300px;
 	margin: 25px auto;
 	padding: 25px;
+
+	position: relative;
+	z-index: $z-index-content-block;
 
 	background: rgba(255,255,255,0.95);
 	border: 1px solid rgba(0,0,0,0.12);
