@@ -90,16 +90,10 @@ header, main, footer {
 	width: 100%;
 }
 
-.modal-section {
-	position: absolute;
-	left: 50%;
-	z-index: $z-index-modal-block;
-}
-
 .base-section {
 	position: relative;
 	width: 100%;
-	z-index: $z-index-modal-block;
+	z-index: $z-index-content-block;
 }
 .base-block {
 	box-sizing: border-box;

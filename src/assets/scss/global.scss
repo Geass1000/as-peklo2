@@ -14,6 +14,11 @@ $font-size-medium: 16px;
 $font-size-large: 20px;
 
 /* Z-index */
+	$z-index-content-overlay: 1; /* Overlay */
+	$z-index-content-block: 2; /* Form block */
+	$z-index-content-c1: 3; /* No important context */
+	$z-index-content-c2: 4; /* Main context */
+	$z-index-content-c3: 5; /* Important context */
 	/* Editor Panel */
 	$z-index-editor-panel-overlay: 6; /* Overlay */
 	$z-index-editor-panel-block: 7; /* Form block */
