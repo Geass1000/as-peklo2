@@ -105,17 +105,14 @@
 			</div>
 			<button type="button" class="order" (click)="onClickOrder()">Заказать</button>
 		</form>
+	</div>
+</section>
 
-		<!--
-			<h1>Арт. удар: {{stateArmory.air_strike}}</h1>
-			<h1>Медикаменты: {{stateArmory.medicaments}}</h1>
-			<h1>Гравибомбы: {{stateArmory.gravibomb}}</h1>
-			<h1>Щиты: {{stateArmory.shields}}</h1>
-			<h1>Косм. мины: {{stateArmory.space_mines}}</h1>
-			<h1>Рем. боты: {{stateArmory.repair_drones}}</h1>
-			<h1>Адаптивное покрытие: {{stateArmory.adaptive_shield}}</h1>
-			<h1>Ловушка: {{stateArmory.ecm}}</h1>
-		-->
-
+<section class="modal-section" *ngIf="gameInfo" [@toggleModal]="animationState">
+	<div class="game-info">
+		<h1 class="header">Ожидайте</h1>
+		<h3 class="description">Начат процесс обработки данных сервером</h3>
+		<h3 class="description">Приблизительное время обработки {{waitMin}} мин. {{waitSec}} сек.</h3>
+		<h3 class="description">Интерфейс разблокируется после завершения обработки</h3>
 	</div>
 </section>
