@@ -2,3 +2,5 @@
 <div *ngIf="loggedIn(); then thenBlock else elseBlock"></div>
 <ng-template #thenBlock><as-game-info></as-game-info></ng-template>
 <ng-template #elseBlock><as-signin></as-signin></ng-template>
+
+<div class="overlay modal-overlay" [class.visible]="openModalOverlay$ | async"></div>

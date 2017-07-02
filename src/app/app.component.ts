@@ -24,6 +24,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
 	/* Redux */
 	private subscription : Array<Subscription> = [];
+	@select(['modal', 'openModalOverlay']) openModalOverlay$ : Observable<boolean>;
 	@select(['state', 'sid']) sid$ : Observable<string>;
 
 	constructor (private ngRedux : NgRedux<IApp>,
