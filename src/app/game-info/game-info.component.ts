@@ -218,7 +218,7 @@ export class GameInfoComponent implements OnInit, OnDestroy {
 		this.logger.info(`${this.constructor.name} - ${methodName}:`, result);
 		let sum : number = 0;
 		for (let prop in result) {
-			sum += result[prop];
+			sum += +result[prop];
 		}
 		const perf : number = 0.2;
 		sum *= perf;
