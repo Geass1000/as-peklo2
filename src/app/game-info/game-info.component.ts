@@ -57,6 +57,7 @@ export class GameInfoComponent implements OnInit, OnDestroy {
 	public form : FormGroup;
 	public waitMin : number;
 	public waitSec : number;
+	public lockOrder : boolean;
 
 	/* Redux */
 	private subscription : Array<Subscription> = [];
@@ -78,6 +79,7 @@ export class GameInfoComponent implements OnInit, OnDestroy {
 
 	ngOnInit () : void {
 		this.buildForm();
+		this.lockOrder = false;
 		this.subscription.push(this.gameInfo$.subscribe((data) => {
 			this.gameInfo = data;
 			this.animationState = data ? 'open' : '';
@@ -213,6 +215,7 @@ export class GameInfoComponent implements OnInit, OnDestroy {
 			this.logger.info(`${this.constructor.name} - ${methodName}:`, 'All field mast be positive');
 			return;
 		}
+		this.lockOrder = true;
 
 		const result : IArmory = <IArmory>Object.assign({}, this.form.value);
 		this.logger.info(`${this.constructor.name} - ${methodName}:`, result);
@@ -243,6 +246,7 @@ export class GameInfoComponent implements OnInit, OnDestroy {
 			() => {
 				setTimeout(() => {
 					this.ngRedux.dispatch(this.appActions.closeActiveModal());
+					this.lockOrder = false;
 				}, 1000);
 			}
 		);
