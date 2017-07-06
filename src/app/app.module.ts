@@ -7,6 +7,7 @@ import { NgReduxModule } from '@angular-redux/store';
 
 /* Feature Modules */
 import { CoreModule } from './core/core.module';
+import { GameInfoModule } from './game-info/game-info.module';
 
 /* Routing Module */
 import { AppRoutingModule } from './app-routing.module';
@@ -15,7 +16,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { SigninComponent } from './signin/signin.component';
-import { GameInfoComponent } from './game-info/game-info.component';
 
 /* App Root - Actions */
 import { AppActions } from './actions/app.actions';
@@ -28,13 +28,15 @@ import { AppActions } from './actions/app.actions';
 		FormsModule,
 		ReactiveFormsModule,
 		NgReduxModule,
+		/* Feature Modules */
+		GameInfoModule,
+		/* Main App Router */
 		AppRoutingModule
 	],
   declarations: [
 		AppComponent,
 		NotFoundComponent,
-		SigninComponent,
-		GameInfoComponent
+		SigninComponent
 	],
 	providers: [
 		AppActions
