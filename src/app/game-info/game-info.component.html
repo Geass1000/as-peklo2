@@ -103,7 +103,7 @@
 						formControlName="ecm" id="ecm" name="ecm" />
 				</div>
 			</div>
-			<button type="button" class="order" (click)="onClickOrder()">Заказать</button>
+			<button type="button" class="order" (click)="onClickOrder()" [disabled]="lockOrder">Заказать</button>
 		</form>
 	</div>
 </section>
