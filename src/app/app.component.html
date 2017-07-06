@@ -1,6 +1,4 @@
 <a (click)='logout()'>Logout</a>
-<div *ngIf="loggedIn(); then thenBlock else elseBlock"></div>
-<ng-template #thenBlock><as-game-info></as-game-info></ng-template>
-<ng-template #elseBlock><as-signin></as-signin></ng-template>
+<router-outlet></router-outlet>
 
 <div class="overlay modal-overlay" [class.visible]="openModalOverlay$ | async"></div>

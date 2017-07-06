@@ -54,7 +54,7 @@ export class GameService implements OnDestroy {
 	 * @param {string} token - jwt-токен
 	 * @return {void}
 	 */
-	login (token ?: string) : void {
+	login (token ?: string) : boolean {
 		if (!token && !this.loggedIn()) {
 			this.logger.info(`${this.constructor.name} - login:`, 'User isn\'t logined!');
 			return ;
@@ -67,6 +67,8 @@ export class GameService implements OnDestroy {
 		} catch (error) {
 			this.logger.warn(`${this.constructor.name} - login:`, 'Token isn\'t exist');
 		}
+		this.router.navigateByUrl('/');
+		return this.loggedIn();
 	}
 
 	/**
@@ -79,6 +81,7 @@ export class GameService implements OnDestroy {
 	 */
 	logout () : void {
 		localStorage.removeItem('token');
+		this.router.navigateByUrl('/signin');
 	}
 
 	/**

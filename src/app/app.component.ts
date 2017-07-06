@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 
 /* App Redux and Request */
 import { AppReducer, INITIAL_STATE, IApp } from './reducers/app.store';
@@ -27,13 +28,17 @@ export class AppComponent implements OnInit, OnDestroy {
 	@select(['modal', 'openModalOverlay']) openModalOverlay$ : Observable<boolean>;
 	@select(['state', 'sid']) sid$ : Observable<string>;
 
-	constructor (private ngRedux : NgRedux<IApp>,
+	constructor (private router: Router,
+							 private ngRedux : NgRedux<IApp>,
 							 private appActions : AppActions,
 						 	 private logger : LoggerService,
 						 	 private gameService : GameService) {
 		this.ngRedux.configureStore(AppReducer, INITIAL_STATE, null, []);
 		this.logger.info(`${this.constructor.name}:`, 'Start app Artificial System!');
-		this.gameService.login();
+		const isLogin : boolean = this.gameService.login();
+		if (!isLogin) {
+			this.router.navigateByUrl('/signin');
+		}
 	}
 	ngOnInit () {
 	}
