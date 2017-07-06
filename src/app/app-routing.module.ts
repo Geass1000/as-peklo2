@@ -3,9 +3,11 @@ import { RouterModule, Routes } from '@angular/router';
 
 /* App Routing - Component */
 import { NotFoundComponent } from './not-found/not-found.component';
+import { SigninComponent } from './signin/signin.component';
 
 const routes : Routes = [
-  { path: '', redirectTo: '/', pathMatch: 'full' },
+  { path: '', redirectTo: '/game', pathMatch: 'full' },
+	{ path: 'signin', component: SigninComponent },
 	{ path: '404', component: NotFoundComponent },
 	{ path: '**', component: NotFoundComponent }
 ];
