@@ -149,6 +149,7 @@ class GameController extends BaseController {
 			if (count === 0) {
 				continue;
 			}
+			this.logger.info(`${this.constructor.name} - ${methodName}:`, 'Count -', count);
 
 			const building = land.indexOf(prop) === -1 ? body.space : body.land;
 			const dataStartContract = `<start_contract uid=\"${acc.uid}\" auth_key=\"${acc.auth_key}\" sid=\"${acc.sid}\">` +
