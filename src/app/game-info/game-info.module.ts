@@ -9,13 +9,14 @@ import { GameInfoRoutingModule } from './game-info-routing.module';
 
 /* App Feature - Component */
 import { GameInfoComponent } from './game-info.component';
+import { ArmoryComponent } from './armory/armory.component';
 
 /* App Feature - Service */
 
 
 @NgModule({
   imports:      [ SharedModule, GameInfoRoutingModule ],
-  declarations: [ GameInfoComponent ],
+  declarations: [ GameInfoComponent, ArmoryComponent ],
   exports:      [ GameInfoComponent ],
   providers:    [  ]
 })

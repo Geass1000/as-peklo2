@@ -1,0 +1,9 @@
+<div [formGroup]="form" class="armory-block"
+	[style.background-image]="getUrlArmory('air_strike')">
+	<div class="description">
+		<div class="name">Арт. удары</div>
+		<div class="amount">{{getValue(stateArmory.air_strike)}} → {{getValue(resultArmory.air_strike)}}</div>
+		<input type="text" *ngIf="stateArmory.air_strike !== null"
+			formControlName="air_strike" id="air_strike" name="air_strike" />
+	</div>
+</div>
