@@ -12,7 +12,6 @@ import { LoggerService } from '../core/logger.service';
 import { GameService } from '../core/game.service';
 
 /* App Interfaces and Classes */
-import { IState } from '../reducers/state.reducer';
 import { IRGameInfo, IResources, IArmory, ICostArmory, ICost, IRGameArmory, IGameArmory } from '../shared/interfaces/game.interface';
 
 /* App Validators */
