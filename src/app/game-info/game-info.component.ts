@@ -136,11 +136,13 @@ export class GameInfoComponent implements OnInit, OnDestroy {
 		const result : IArmory = <IArmory>Object.assign({}, this.form.value);
 		this.logger.info(`${this.constructor.name} - ${methodName}:`, result);
 
-		for (let prop in result) {
-			const value : number = +result[prop];
-			const cost : ICost = costArmory[prop];
-		  this.balance[cost.type] -= cost.cost * value;
-			this.resultArmory[prop] = (+this.resultArmory[prop] + 5 * value).toString();
+		for (const prop in result) {
+			if (result.hasOwnProperty(prop)) {
+				const value : number = +result[prop];
+				const cost : ICost = costArmory[prop];
+			  this.balance[cost.type] -= cost.cost * value;
+				this.resultArmory[prop] = (+this.resultArmory[prop] + 5 * value).toString();
+			}
 		}
   }
 
@@ -208,8 +210,10 @@ export class GameInfoComponent implements OnInit, OnDestroy {
 			return;
 		}
 		let confirm : boolean = true;
-		for(let prop in this.balance) {
-			confirm = confirm && this.balance[prop] >= 0;
+		for (const prop in this.balance) {
+			if (this.balance.hasOwnProperty(prop)) {
+				confirm = confirm && this.balance[prop] >= 0;
+			}
 		}
 		if (!confirm) {
 			this.logger.info(`${this.constructor.name} - ${methodName}:`, 'All field mast be positive');
@@ -220,8 +224,10 @@ export class GameInfoComponent implements OnInit, OnDestroy {
 		const result : IArmory = <IArmory>Object.assign({}, this.form.value);
 		this.logger.info(`${this.constructor.name} - ${methodName}:`, result);
 		let sum : number = 0;
-		for (let prop in result) {
-			sum += +result[prop];
+		for (const prop in result) {
+			if (result.hasOwnProperty(prop)) {
+				sum += +result[prop];
+			}
 		}
 		const perf : number = 0.2;
 		sum *= perf;
