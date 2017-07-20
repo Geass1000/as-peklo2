@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { InputSelectDirective } from './directives/input-select.directive';
 
 @NgModule({
   imports: [
@@ -11,6 +12,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 		BrowserAnimationsModule
 	],
   declarations: [
+		InputSelectDirective
 	],
   exports: [
 		// Modules
@@ -18,7 +20,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 		FormsModule,
 		ReactiveFormsModule,
 		BrowserModule,
-		BrowserAnimationsModule
+		BrowserAnimationsModule,
+		//Directives
+		InputSelectDirective
 	]
 })
 export class SharedModule {
