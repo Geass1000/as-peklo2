@@ -1,7 +1,8 @@
-<form [formGroup]="form" class="armory-block" *ngIf="!!dataType && !!stateArmory"
-	[style.background-image]="getUrlArmory('air_strike')">
+<form [formGroup]="form" class="armory-block"
+	*ngIf="!!dataType && !!stateArmory && !!stateOrder"
+	[style.background-image]="getUrlArmory()">
 	<div class="description">
-		<div class="name">Арт. удары</div>
+		<div class="name">{{getNameArmory()}}</div>
 		<div class="amount">{{current}} → {{result}}</div>
 		<input type="text" asInputSelect
 			[formControlName]="dataType" [id]="dataType" [attr.name]="dataType" />

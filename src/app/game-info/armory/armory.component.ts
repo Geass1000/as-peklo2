@@ -33,7 +33,7 @@ export class ArmoryComponent implements OnInit, OnDestroy {
 	public formChange : Subscription;
 	public current : number;
 	public result : number;
-	private isChange : boolean;
+	private lang : any;
 
 	/* Redux */
 	private subscription : Array<Subscription> = [];
@@ -46,22 +46,22 @@ export class ArmoryComponent implements OnInit, OnDestroy {
 						 	private ngRedux : NgRedux<any>,
 						 	private appActions : AppActions,
 						 	private logger : LoggerService) {
-		this.isChange = false;
+		this.lang = lang;
 	}
 
   ngOnInit() {
 		this.logger.info(`${this.constructor.name} - ngOnInit:`, this.dataType);
+		this.buildForm();
 		this.stateArmory$.combineLatest(this.stateOrder$).subscribe((data) => {
 			this.logger.info(`${this.constructor.name} - ngOnInit`, data);
-			if (data[0]) {
-				this.stateArmory = Object.assign({}, data[0]);
-				this.current = +this.stateArmory[this.dataType];
-				this.result = this.current;
+			if (!(data[0] && data[1])) {
+				return;
 			}
-			if (data[1]) {
-				this.stateOrder = Object.assign({}, data[1]);
-				this.buildForm();
-			}
+			this.stateArmory = data[0];
+			this.stateOrder = data[1];
+			this.current = +this.stateArmory[this.dataType];
+			const order : string = this.stateOrder[this.dataType];
+			this.result = this.current + 5 * (+order);
 		});
   }
 	ngOnDestroy () : void {
@@ -75,41 +75,33 @@ export class ArmoryComponent implements OnInit, OnDestroy {
 	 * @return {void}
 	 */
 	buildForm () : void {
-		if (!this.dataType || this.isChange) {
-			this.isChange = false;
-			return ;
-		}
-		if (this.formChange) {
-			this.formChange.unsubscribe();
-		}
 		const fieldForm : { [key : string] : any } = {};
-		fieldForm[this.dataType] = [ this.stateOrder[this.dataType], [
+		fieldForm[this.dataType] = [ '0', [
 			Validators.required, isNumber(false)
 		]];
 
 		this.form = this.fb.group(fieldForm);
 
-		this.formChange = this.form.valueChanges
+		const sub : Subscription = this.form.valueChanges
       .subscribe(data => this.onValueChanged(data));
-
-    this.onValueChanged();
+		this.subscription.push(sub);
 	}
 
 	onValueChanged (data?: any) : void {
 		const methodName : string = 'onValueChanged';
 
+		let formValue : string;
 		if (this.form.invalid) {
-			this.logger.info(`${this.constructor.name} - ${methodName}:`, 'Form invalid');
-			this.result = this.current;
-			return;
+			this.logger.info(`${this.constructor.name} - ${methodName}:`, 'Form invalid -', this.dataType);
+			formValue = '0';
+		} else {
+			this.logger.info(`${this.constructor.name} - ${methodName}:`, 'Form valid -', this.dataType);
+			formValue = this.form.get(this.dataType).value;
 		}
 
-		const formValue : string = this.form.get(this.dataType).value;
-		this.result = this.current + 5 * (+formValue);
 		const resultOrder : IArmory = Object.assign({}, this.stateOrder);
 		resultOrder[this.dataType] = formValue;
-
-		this.isChange = true;
+		this.ngRedux.dispatch(this.appActions.setOrder(resultOrder));
   }
 
 	/**
@@ -118,7 +110,10 @@ export class ArmoryComponent implements OnInit, OnDestroy {
 	 * @kind {event}
 	 * @return {void}
 	 */
-	getUrlArmory (str : string) : string {
-		return `url('./assets/imgs/armory/${str}_big.png')`;
+	getUrlArmory () : string {
+		return `url('./assets/imgs/armory/${this.dataType}_big.png')`;
+	}
+	getNameArmory () : string {
+		return this.lang['ru']['gameInfoArmory'][this.dataType];
 	}
 }
