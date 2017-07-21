@@ -36,6 +36,8 @@ export class ArmoryComponent implements OnInit, OnDestroy {
 	private subscription : Array<Subscription> = [];
 	@select(['state', 'armory']) stateArmory$ : Observable<IArmory>;
 	public stateArmory : IArmory;
+	@select(['state', 'order']) stateOrder$ : Observable<IArmory>;
+	public stateOrder : IArmory;
 
   constructor(private fb : FormBuilder,
 						 	private ngRedux : NgRedux<any>,
@@ -50,6 +52,9 @@ export class ArmoryComponent implements OnInit, OnDestroy {
 			this.result = this.current;
 			this.ngOnDestroy();
 			this.buildForm();
+		}));
+		this.subscription.push(this.stateOrder$.subscribe((data) => {
+			this.stateOrder = Object.assign({}, data);
 		}));
   }
 	ngOnDestroy () : void {
