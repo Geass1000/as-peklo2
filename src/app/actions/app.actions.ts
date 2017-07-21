@@ -14,6 +14,7 @@ export class AppActions {
 	static readonly SET_ACC = AppActions.CLASS_NAME + 'SET_ACC';
 	static readonly SET_RESOURCES = AppActions.CLASS_NAME + 'SET_RESOURCES';
 	static readonly SET_ARMORY = AppActions.CLASS_NAME + 'SET_ARMORY';
+	static readonly SET_ORDER = AppActions.CLASS_NAME + 'SET_ORDER';
 
 	openModal (name : string, state : boolean = true) : IAction {
     return {
@@ -55,6 +56,12 @@ export class AppActions {
     return {
       type : AppActions.SET_ARMORY,
 			payload : {	armory : armory	}
+    };
+  }
+	setOrder (order : IArmory) : IAction {
+    return {
+      type : AppActions.SET_ORDER,
+			payload : {	order : order	}
     };
   }
 }

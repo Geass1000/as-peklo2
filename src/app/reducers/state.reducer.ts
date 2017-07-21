@@ -7,11 +7,13 @@ import { IResources, IArmory } from '../shared/interfaces/game.interface';
 export interface IState {
 	resources : IResources;
 	armory : IArmory;
+	order : IArmory;
 }
 
 export const INITIAL_STATE : IState = {
 	resources : null,
-	armory : null
+	armory : null,
+	order : null
 };
 
 export const StateReducer : Reducer<IState> = (state = INITIAL_STATE, action : IAction) : IState => {
@@ -24,6 +26,11 @@ export const StateReducer : Reducer<IState> = (state = INITIAL_STATE, action : I
 		case AppActions.SET_ARMORY : {
 			return Object.assign({}, state, {
 				armory : <IArmory>action.payload.armory
+			});
+		}
+		case AppActions.SET_ORDER : {
+			return Object.assign({}, state, {
+				order : <IArmory>action.payload.order
 			});
 		}
 	}
