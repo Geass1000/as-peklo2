@@ -8,6 +8,7 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { NgRedux, select } from '@angular-redux/store';
 import { AppActions } from '../../actions/app.actions';
+import 'rxjs/add/operator/combineLatest';
 
 /* App Services */
 import { LoggerService } from '../../core/logger.service';
@@ -29,8 +30,10 @@ export class ArmoryComponent implements OnInit, OnDestroy {
 
 	/* Public Variable */
 	public form : FormGroup;
+	public formChange : Subscription;
 	public current : number;
 	public result : number;
+	private isChange : boolean;
 
 	/* Redux */
 	private subscription : Array<Subscription> = [];
@@ -42,20 +45,24 @@ export class ArmoryComponent implements OnInit, OnDestroy {
   constructor(private fb : FormBuilder,
 						 	private ngRedux : NgRedux<any>,
 						 	private appActions : AppActions,
-						 	private logger : LoggerService) { }
+						 	private logger : LoggerService) {
+		this.isChange = false;
+	}
 
   ngOnInit() {
 		this.logger.info(`${this.constructor.name} - ngOnInit:`, this.dataType);
-		this.subscription.push(this.stateArmory$.subscribe((data) => {
-			this.stateArmory = Object.assign({}, data);
-			this.current = +this.stateArmory[this.dataType];
-			this.result = this.current;
-			this.ngOnDestroy();
-			this.buildForm();
-		}));
-		this.subscription.push(this.stateOrder$.subscribe((data) => {
-			this.stateOrder = Object.assign({}, data);
-		}));
+		this.stateArmory$.combineLatest(this.stateOrder$).subscribe((data) => {
+			this.logger.info(`${this.constructor.name} - ngOnInit`, data);
+			if (data[0]) {
+				this.stateArmory = Object.assign({}, data[0]);
+				this.current = +this.stateArmory[this.dataType];
+				this.result = this.current;
+			}
+			if (data[1]) {
+				this.stateOrder = Object.assign({}, data[1]);
+				this.buildForm();
+			}
+		});
   }
 	ngOnDestroy () : void {
 		this.subscription.map((data) => data.unsubscribe());
@@ -68,17 +75,22 @@ export class ArmoryComponent implements OnInit, OnDestroy {
 	 * @return {void}
 	 */
 	buildForm () : void {
-		if (!this.dataType) {
+		if (!this.dataType || this.isChange) {
+			this.isChange = false;
 			return ;
 		}
+		if (this.formChange) {
+			this.formChange.unsubscribe();
+		}
 		const fieldForm : { [key : string] : any } = {};
-		fieldForm[this.dataType] = [ '0', [ Validators.required, isNumber(false) ] ];
+		fieldForm[this.dataType] = [ this.stateOrder[this.dataType], [
+			Validators.required, isNumber(false)
+		]];
 
 		this.form = this.fb.group(fieldForm);
 
-		const sub : Subscription = this.form.valueChanges
+		this.formChange = this.form.valueChanges
       .subscribe(data => this.onValueChanged(data));
-		this.subscription.push(sub);
 
     this.onValueChanged();
 	}
@@ -92,8 +104,12 @@ export class ArmoryComponent implements OnInit, OnDestroy {
 			return;
 		}
 
-		const formValue : number = +this.form.get(this.dataType).value;
-		this.result = this.current + 5 * formValue;
+		const formValue : string = this.form.get(this.dataType).value;
+		this.result = this.current + 5 * (+formValue);
+		const resultOrder : IArmory = Object.assign({}, this.stateOrder);
+		resultOrder[this.dataType] = formValue;
+
+		this.isChange = true;
   }
 
 	/**
