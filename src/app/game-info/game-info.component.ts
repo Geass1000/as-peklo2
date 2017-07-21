@@ -31,6 +31,17 @@ const initModel : IArmory = {
 	ecm : '0'
 };
 
+const initOrder : IArmory = {
+	air_strike : '0',
+	medicaments : '0',
+	gravibomb : '0',
+	shields : '0',
+	space_mines : '0',
+	repair_drones : '0',
+	adaptive_shield : '0',
+	ecm : '0'
+};
+
 const costArmory : ICostArmory = {
 	air_strike : { type : 'crystal', cost : 30 },
 	medicaments : { type : 'crystal', cost : 30 },
@@ -186,6 +197,7 @@ export class GameInfoComponent implements OnInit, OnDestroy {
 			(data : IRGameInfo) => {
 				this.ngRedux.dispatch(this.appActions.setResources(data.resources));
 				this.ngRedux.dispatch(this.appActions.setArmory(data.armory));
+				this.ngRedux.dispatch(this.appActions.setOrder(initOrder));
 				this.land = data.land;
 				this.space = data.space;
 			},
