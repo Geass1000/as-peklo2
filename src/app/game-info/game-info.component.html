@@ -10,7 +10,7 @@
 					<div class="balance">{{getValue(balance.metal)}}</div>
 				</div>
 			</div>
-			<div class="resource-block" [style.background-image]="getUrlResouce('crystallite')">
+			<div class="resource-block" [style.background-image]="getUrlResouce('crystal')">
 				<div class="description">
 					<div class="name">Кристалл</div>
 					<div class="name">Тек.</div>
@@ -105,6 +105,8 @@
 			</div>
 			<button type="button" class="order" (click)="onClickOrder()" [disabled]="lockOrder">Заказать</button>
 		</form>
+		<as-resource [dataType]="'metal'"></as-resource>
+		<as-resource [dataType]="'crystal'"></as-resource>
 		<as-armory [dataType]="'air_strike'"></as-armory>
 		<as-armory [dataType]="'medicaments'"></as-armory>
 	</div>
