@@ -17,7 +17,7 @@ export interface IRGameInfo {
 
 export interface IResources {
 	metal : string;
-	cristal : string;
+	crystal : string;
 	cordit : string;
 	fuel : string;
 }
