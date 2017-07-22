@@ -1,0 +1,46 @@
+@import "../../../assets/scss/global.scss";
+
+.resource-block {
+	box-sizing: border-box;
+	width: 25%;
+	height: 130px;
+
+	position: relative;
+
+	background-size: cover;
+	border: 1px solid rgb(223, 223, 223);
+
+	.description {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+
+		padding: 10px;
+
+		position: absolute;
+		top: 0;
+		right: 0;
+		bottom: 0;
+
+		background: rgba(0,0,0,0.80);
+		border-left: 1px solid rgb(223, 223, 223);
+
+		color: #fff;
+		font-size: 17px;
+		font-weight: bold;
+
+		.name {
+			margin-bottom: 5px;
+		}
+	}
+
+	&:hover {
+		border-color: $color-text-2;
+		.description {
+			border-color: $color-text-2;
+
+			color: $color-text-2;
+		}
+	}
+}
