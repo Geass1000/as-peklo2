@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import lang from '../../../assets/lang/lang';
@@ -52,7 +52,7 @@ export class ArmoryComponent implements OnInit, OnDestroy {
   ngOnInit() {
 		this.logger.info(`${this.constructor.name} - ngOnInit:`, this.dataType);
 		this.buildForm();
-		this.stateArmory$.combineLatest(this.stateOrder$).subscribe((data) => {
+		const sub : Subscription = this.stateArmory$.combineLatest(this.stateOrder$).subscribe((data) => {
 			this.logger.info(`${this.constructor.name} - ngOnInit`, data);
 			if (!(data[0] && data[1])) {
 				return;
@@ -63,6 +63,7 @@ export class ArmoryComponent implements OnInit, OnDestroy {
 			const order : string = this.stateOrder[this.dataType];
 			this.result = this.current + 5 * (+order);
 		});
+		this.subscription.push(sub);
   }
 	ngOnDestroy () : void {
 		this.subscription.map((data) => data.unsubscribe());
