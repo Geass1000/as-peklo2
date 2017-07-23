@@ -1,114 +1,12 @@
 <section class="base-section">
 	<div class="base-block page-block game-info-block">
-		<div class="resources-block" *ngIf="stateResources">
-			<div class="resource-block" [style.background-image]="getUrlResouce('metal')">
-				<div class="description">
-					<div class="name">Металл</div>
-					<div class="name">Тек.</div>
-					<div class="amount">{{getValue(stateResources.metal)}}</div>
-					<div class="name">Ост.</div>
-					<div class="balance">{{getValue(balance.metal)}}</div>
-				</div>
-			</div>
-			<div class="resource-block" [style.background-image]="getUrlResouce('crystal')">
-				<div class="description">
-					<div class="name">Кристалл</div>
-					<div class="name">Тек.</div>
-					<div class="amount">{{getValue(stateResources.crystal)}}</div>
-					<div class="name">Ост.</div>
-					<div class="balance">{{getValue(balance.crystal)}}</div>
-				</div>
-			</div>
-			<div class="resource-block" [style.background-image]="getUrlResouce('cordite')">
-				<div class="description">
-					<div class="name">Кордит</div>
-					<div class="name">Тек.</div>
-					<div class="amount">{{getValue(stateResources.cordite)}}</div>
-					<div class="name">Ост.</div>
-					<div class="balance">{{getValue(balance.cordite)}}</div>
-				</div>
-			</div>
-			<div class="resource-block" [style.background-image]="getUrlResouce('fuel')">
-				<div class="description">
-					<div class="name">Топливо</div>
-					<div class="name">Тек.</div>
-					<div class="amount">{{getValue(stateResources.fuel)}}</div>
-					<div class="name">Ост.</div>
-					<div class="balance">{{getValue(balance.fuel)}}</div>
-				</div>
-			</div>
+		<div class="resources-block">
+			<as-resource *ngFor="let typeRecource of listResources" [dataType]="typeRecource"></as-resource>
 		</div>
-		<form [formGroup]="form" class="armories-block" *ngIf="stateArmory">
-			<div class="armory-block" [style.background-image]="getUrlArmory('air_strike')">
-				<div class="description">
-					<div class="name">Арт. удары</div>
-					<div class="amount">{{getValue(stateArmory.air_strike)}} → {{getValue(resultArmory.air_strike)}}</div>
-					<input type="text" *ngIf="stateArmory.air_strike !== null"
-						formControlName="air_strike" id="air_strike" name="air_strike" />
-				</div>
-			</div>
-			<div class="armory-block" [style.background-image]="getUrlArmory('medicaments')">
-				<div class="description">
-					<div class="name">Медикаменты</div>
-					<div class="amount">{{getValue(stateArmory.medicaments)}} → {{getValue(resultArmory.medicaments)}}</div>
-					<input type="text" *ngIf="stateArmory.medicaments !== null"
-						formControlName="medicaments" id="medicaments" name="medicaments" />
-				</div>
-			</div>
-			<div class="armory-block" [style.background-image]="getUrlArmory('gravibomb')">
-				<div class="description">
-					<div class="name">Гравибомбы</div>
-					<div class="amount">{{getValue(stateArmory.gravibomb)}} → {{getValue(resultArmory.gravibomb)}}</div>
-					<input type="text" *ngIf="stateArmory.gravibomb !== null"
-						formControlName="gravibomb" id="gravibomb" name="gravibomb" />
-				</div>
-			</div>
-			<div class="armory-block" [style.background-image]="getUrlArmory('shields')">
-				<div class="description">
-					<div class="name">Щиты</div>
-					<div class="amount">{{getValue(stateArmory.shields)}} → {{getValue(resultArmory.shields)}}</div>
-					<input type="text" *ngIf="stateArmory.shields !== null"
-						formControlName="shields" id="shields" name="shields" />
-				</div>
-			</div>
-			<div class="armory-block" [style.background-image]="getUrlArmory('space_mines')">
-				<div class="description">
-					<div class="name">Космические мины</div>
-					<div class="amount">{{getValue(stateArmory.space_mines)}} → {{getValue(resultArmory.space_mines)}}</div>
-					<input type="text" *ngIf="stateArmory.space_mines !== null"
-						formControlName="space_mines" id="space_mines" name="space_mines" />
-				</div>
-			</div>
-			<div class="armory-block" [style.background-image]="getUrlArmory('repair_drones')">
-				<div class="description">
-					<div class="name">Ремонтные дроиды</div>
-					<div class="amount">{{getValue(stateArmory.repair_drones)}} → {{getValue(resultArmory.repair_drones)}}</div>
-					<input type="text" *ngIf="stateArmory.repair_drones !== null"
-						formControlName="repair_drones" id="repair_drones" name="repair_drones" />
-				</div>
-			</div>
-			<div class="armory-block" [style.background-image]="getUrlArmory('adaptive_shield')">
-				<div class="description">
-					<div class="name">Адаптивные щиты</div>
-					<div class="amount">{{getValue(stateArmory.adaptive_shield)}} → {{getValue(resultArmory.adaptive_shield)}}</div>
-					<input type="text" *ngIf="stateArmory.adaptive_shield !== null"
-						formControlName="adaptive_shield" id="adaptive_shield" name="adaptive_shield" />
-				</div>
-			</div>
-			<div class="armory-block" [style.background-image]="getUrlArmory('ecm')">
-				<div class="description">
-					<div class="name">Эхо</div>
-					<div class="amount">{{getValue(stateArmory.ecm)}} → {{getValue(resultArmory.ecm)}}</div>
-					<input type="text" *ngIf="stateArmory.ecm !== null"
-						formControlName="ecm" id="ecm" name="ecm" />
-				</div>
-			</div>
-			<button type="button" class="order" (click)="onClickOrder()" [disabled]="lockOrder">Заказать</button>
-		</form>
-		<as-resource [dataType]="'metal'"></as-resource>
-		<as-resource [dataType]="'crystal'"></as-resource>
-		<as-armory [dataType]="'air_strike'"></as-armory>
-		<as-armory [dataType]="'medicaments'"></as-armory>
+		<div class="armories-block">
+			<as-armory *ngFor="let typeArmory of listArmories" [dataType]="typeArmory"></as-armory>
+		</div>
+		<button type="button" class="order" (click)="onClickOrder()" [disabled]="lockOrder">Заказать</button>
 	</div>
 </section>
 

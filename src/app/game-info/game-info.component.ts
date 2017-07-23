@@ -20,17 +20,6 @@ import { isNumber } from '../shared/validators/is-number.validator';
 /* App Animations */
 import { animation } from '../shared/animations/modal.animation';
 
-const initModel : IArmory = {
-	air_strike : '0',
-	medicaments : '0',
-	gravibomb : '0',
-	shields : '0',
-	space_mines : '0',
-	repair_drones : '0',
-	adaptive_shield : '0',
-	ecm : '0'
-};
-
 const initOrder : IArmory = {
 	air_strike : '0',
 	medicaments : '0',
@@ -42,17 +31,6 @@ const initOrder : IArmory = {
 	ecm : '0'
 };
 
-const costArmory : ICostArmory = {
-	air_strike : { type : 'crystal', cost : 30 },
-	medicaments : { type : 'crystal', cost : 30 },
-	gravibomb : { type : 'cordite', cost : 50 },
-	shields : { type : 'cordite', cost : 50 },
-	space_mines : { type : 'cordite', cost : 25 },
-	repair_drones : { type : 'cordite', cost : 25 },
-	adaptive_shield : { type : 'cordite', cost : 50 },
-	ecm : { type : 'cordite', cost : 50 }
-};
-
 @Component({
 	moduleId : module.id,
 	selector : 'as-game-info',
@@ -61,13 +39,15 @@ const costArmory : ICostArmory = {
 	animations : [ animation ]
 })
 export class GameInfoComponent implements OnInit, OnDestroy {
-	public balance : IResources;
-	public resultArmory : IArmory;
 	public animationState : string = 'open';
-	public form : FormGroup;
 	public waitMin : number;
 	public waitSec : number;
 	public lockOrder : boolean;
+	public listResources : Array<string> = [ 'metal', 'crystal', 'cordite', 'fuel' ];
+	public listArmories : Array<string> = [
+		'air_strike', 'medicaments', 'gravibomb', 'shields',
+		'space_mines', 'repair_drones', 'adaptive_shield', 'ecm'
+	];
 
 	/* Redux */
 	private subscription : Array<Subscription> = [];
@@ -75,8 +55,8 @@ export class GameInfoComponent implements OnInit, OnDestroy {
 	public gameInfo : boolean;
 	@select(['state', 'resources']) stateResources$ : Observable<IResources>;
 	public stateResources : IResources;
-	@select(['state', 'armory']) stateArmory$ : Observable<IArmory>;
-	public stateArmory : IArmory;
+	@select(['state', 'order']) stateOrder$ : Observable<IArmory>;
+	public stateOrder : IArmory;
 
 	private land : string;
 	private space : string;
@@ -88,7 +68,6 @@ export class GameInfoComponent implements OnInit, OnDestroy {
 						 	 private gameService : GameService) { ; }
 
 	ngOnInit () : void {
-		this.buildForm();
 		this.lockOrder = false;
 		this.subscription.push(this.gameInfo$.subscribe((data) => {
 			this.gameInfo = data;
@@ -96,94 +75,14 @@ export class GameInfoComponent implements OnInit, OnDestroy {
 		}));
 		this.subscription.push(this.stateResources$.subscribe((data) => {
 			this.stateResources = Object.assign({}, data);
-			this.balance = Object.assign({}, data);
 		}));
-		this.subscription.push(this.stateArmory$.subscribe((data) => {
-			this.resultArmory = Object.assign({}, data);
-			this.stateArmory = Object.assign({}, data);
+		this.subscription.push(this.stateOrder$.subscribe((data) => {
+			this.stateOrder = Object.assign({}, data);
 		}));
 		this.getInfo();
   }
 	ngOnDestroy () : void {
 		this.subscription.map((data) => data.unsubscribe());
-	}
-
-	/**
-	 * buildForm - функция-метод, выполняет создание формы и возможные регистрации
-	 * на события формы.
-	 *
-	 * @function
-	 * @return {void}
-	 */
-	buildForm () : void {
-		this.form = this.fb.group({
-      'air_strike' : [ '0', [ Validators.required, isNumber(false) ] ],
-			'medicaments' : [ '0', [ Validators.required, isNumber(false) ] ],
-			'gravibomb' : [ '0', [ Validators.required, isNumber(false) ] ],
-			'shields' : [ '0', [ Validators.required, isNumber(false) ] ],
-			'space_mines' : [ '0', [ Validators.required, isNumber(false) ] ],
-			'repair_drones' : [ '0', [ Validators.required, isNumber(false) ] ],
-			'adaptive_shield' : [ '0', [ Validators.required, isNumber(false) ] ],
-			'ecm' : [ '0', [ Validators.required, isNumber(false) ] ],
-    });
-
-		this.form.valueChanges
-      .subscribe(data => this.onValueChanged(data));
-
-    this.onValueChanged();
-	}
-
-	onValueChanged (data?: any) : void {
-		const methodName : string = 'onValueChanged';
-
-		if (this.form.invalid) {
-			this.logger.info(`${this.constructor.name} - ${methodName}:`, 'Form invalid');
-			return;
-		}
-
-		this.balance = Object.assign({}, this.stateResources);
-		this.resultArmory = Object.assign({}, this.stateArmory);
-		const result : IArmory = <IArmory>Object.assign({}, this.form.value);
-		this.logger.info(`${this.constructor.name} - ${methodName}:`, result);
-
-		for (const prop in result) {
-			if (result.hasOwnProperty(prop)) {
-				const value : number = +result[prop];
-				const cost : ICost = costArmory[prop];
-			  this.balance[cost.type] -= cost.cost * value;
-				this.resultArmory[prop] = (+this.resultArmory[prop] + 5 * value).toString();
-			}
-		}
-  }
-
-	/**
-	 * getUrlResouce - выполняет формирование URL изображения ресурсов.
-	 *
-	 * @kind {event}
-	 * @return {void}
-	 */
-	getUrlResouce (str : string) : string {
-		return `url('./assets/imgs/resources/${str}_big.png')`;
-	}
-
-	/**
-	 * getUrlResouce - выполняет формирование URL изображения ресурсов.
-	 *
-	 * @kind {event}
-	 * @return {void}
-	 */
-	getUrlArmory (str : string) : string {
-		return `url('./assets/imgs/armory/${str}_big.png')`;
-	}
-
-	/**
-	 * getUrlResouce - выполняет формирование URL изображения ресурсов.
-	 *
-	 * @kind {event}
-	 * @return {void}
-	 */
-	getValue (str : string) : number {
-		return +str;
 	}
 
 	/**
@@ -195,9 +94,9 @@ export class GameInfoComponent implements OnInit, OnDestroy {
 	getInfo () : void {
 		const sub : Subscription = this.gameService.postGetInfo().subscribe(
 			(data : IRGameInfo) => {
+				this.ngRedux.dispatch(this.appActions.setOrder(initOrder));
 				this.ngRedux.dispatch(this.appActions.setResources(data.resources));
 				this.ngRedux.dispatch(this.appActions.setArmory(data.armory));
-				this.ngRedux.dispatch(this.appActions.setOrder(initOrder));
 				this.land = data.land;
 				this.space = data.space;
 			},
@@ -216,28 +115,27 @@ export class GameInfoComponent implements OnInit, OnDestroy {
 	 */
 	onClickOrder () : void {
 		const methodName : string = 'onClickOrder';
-		if (this.form.invalid) {
-			this.logger.info(`${this.constructor.name} - ${methodName}:`, 'Form invalid');
+		if (!this.stateResources || !this.stateOrder) {
+			this.logger.info(`${this.constructor.name} - ${methodName}:`, 'All data must be receive');
 			return;
 		}
+
 		let confirm : boolean = true;
-		for (const prop in this.balance) {
-			if (this.balance.hasOwnProperty(prop)) {
-				confirm = confirm && this.balance[prop] >= 0;
+		for (const prop in this.stateResources) {
+			if (this.stateResources.hasOwnProperty(prop)) {
+				confirm = confirm && this.stateResources[prop] >= 0;
 			}
 		}
 		if (!confirm) {
-			this.logger.info(`${this.constructor.name} - ${methodName}:`, 'All field mast be positive');
+			this.logger.info(`${this.constructor.name} - ${methodName}:`, 'All resources mast be positive');
 			return;
 		}
 		this.lockOrder = true;
 
-		const result : IArmory = <IArmory>Object.assign({}, this.form.value);
-		this.logger.info(`${this.constructor.name} - ${methodName}:`, result);
 		let sum : number = 0;
-		for (const prop in result) {
-			if (result.hasOwnProperty(prop)) {
-				sum += +result[prop];
+		for (const prop in this.stateOrder) {
+			if (this.stateOrder.hasOwnProperty(prop)) {
+				sum += +this.stateOrder[prop];
 			}
 		}
 		const perf : number = 0.2;
@@ -250,12 +148,13 @@ export class GameInfoComponent implements OnInit, OnDestroy {
 		const value = {
 			land : this.land,
 			space : this.space,
-			armory : result
+			armory : this.stateOrder
 		}
+		this.logger.info(`${this.constructor.name} - ${methodName}:`, value);
 		const sub : Subscription = this.gameService.postGetArmory(value).subscribe(
 			(data : IRGameArmory) => {
 				this.logger.info(`${this.constructor.name} - ${methodName}:`, data);
-				this.ngOnInit();
+				this.getInfo();
 			},
 			(error : string) => {
 				this.logger.info(`${this.constructor.name} - getInfo:`, error);
