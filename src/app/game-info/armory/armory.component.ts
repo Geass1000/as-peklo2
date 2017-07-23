@@ -34,9 +34,11 @@ export class ArmoryComponent implements OnInit, OnDestroy {
 	public current : number;
 	public result : number;
 	private lang : any;
+	private isChanged : boolean;
 
 	/* Redux */
 	private subscription : Array<Subscription> = [];
+	@select(['state', 'resources']) stateResources$ : Observable<IResources>;
 	@select(['state', 'armory']) stateArmory$ : Observable<IArmory>;
 	public stateArmory : IArmory;
 	@select(['state', 'order']) stateOrder$ : Observable<IArmory>;
@@ -47,6 +49,7 @@ export class ArmoryComponent implements OnInit, OnDestroy {
 						 	private appActions : AppActions,
 						 	private logger : LoggerService) {
 		this.lang = lang;
+		this.isChanged = false;
 	}
 
   ngOnInit() {
@@ -64,6 +67,16 @@ export class ArmoryComponent implements OnInit, OnDestroy {
 			this.result = this.current + 5 * (+order);
 		});
 		this.subscription.push(sub);
+		this.subscription.push(this.stateResources$.subscribe((data) => {
+			if (!this.stateOrder) {
+				return;
+			}
+			const newValue = {};
+			const order : string = this.stateOrder[this.dataType];
+			newValue[this.dataType] = order;
+			this.isChanged = true;
+			this.form.setValue(newValue);
+		}));
   }
 	ngOnDestroy () : void {
 		this.subscription.map((data) => data.unsubscribe());
@@ -90,6 +103,10 @@ export class ArmoryComponent implements OnInit, OnDestroy {
 
 	onValueChanged (data?: any) : void {
 		const methodName : string = 'onValueChanged';
+		if (this.isChanged) {
+			this.isChanged = false;
+			return;
+		}
 
 		let formValue : string;
 		if (this.form.invalid) {
@@ -106,14 +123,21 @@ export class ArmoryComponent implements OnInit, OnDestroy {
   }
 
 	/**
-	 * getUrlArmory - выполняет формирование URL изображения амуниции.
+	 * getUrlArmory - method performs create URL img armory.
 	 *
-	 * @kind {event}
-	 * @return {void}
+	 * @kind {method}
+	 * @return {string} - URL img
 	 */
 	getUrlArmory () : string {
 		return `url('./assets/imgs/armory/${this.dataType}_big.png')`;
 	}
+
+	/**
+	 * getNameArmory - method performs receiving name armory.
+	 *
+	 * @kind {method}
+	 * @return {string} - name
+	 */
 	getNameArmory () : string {
 		return this.lang['ru']['gameInfoArmory'][this.dataType];
 	}
