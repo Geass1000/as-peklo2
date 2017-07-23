@@ -38,6 +38,7 @@ export class ResourceComponent implements OnInit, OnDestroy {
 	/* Public Variable */
 	public balance : number;
 	public residual : number;
+	private lang : any;
 
 	/* Redux */
 	private subscription : Array<Subscription> = [];
@@ -49,7 +50,9 @@ export class ResourceComponent implements OnInit, OnDestroy {
   constructor(private ngRedux : NgRedux<any>,
 							private appActions : AppActions,
 							private logger : LoggerService) {
+		this.lang = lang;
 	}
+
   ngOnInit() {
 		this.logger.info(`${this.constructor.name} - ngOnInit:`, this.dataType);
 		const sub : Subscription = this.stateResources$.combineLatest(this.stateOrder$).subscribe((data) => {
@@ -96,5 +99,15 @@ export class ResourceComponent implements OnInit, OnDestroy {
 			  this.residual -= cost.cost * value;
 			}
 		}
+	}
+
+	/**
+	 * getNameArmory - method performs receiving name resource.
+	 *
+	 * @kind {method}
+	 * @return {string} - name
+	 */
+	getNameRecource () : string {
+		return this.lang['ru']['gameInfoResource'][this.dataType];
 	}
 }
