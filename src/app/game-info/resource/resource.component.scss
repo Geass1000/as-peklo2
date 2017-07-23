@@ -1,8 +1,12 @@
 @import "../../../assets/scss/global.scss";
 
+:host {
+	width: 25%;
+}
+
 .resource-block {
 	box-sizing: border-box;
-	width: 25%;
+	width: 100%;
 	height: 130px;
 
 	position: relative;
