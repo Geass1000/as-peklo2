@@ -1,5 +1,7 @@
 import gameInfoArmory from './game-info-armory';
+import gameInfoResource from './game-info-resource';
 
 export default {
-	'gameInfoArmory' : gameInfoArmory
+	'gameInfoArmory' : gameInfoArmory,
+	'gameInfoResource' : gameInfoResource
 }
